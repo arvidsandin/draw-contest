@@ -72,12 +72,15 @@ input{
   font-size: inherit;
   width: 100%;
   height: 100%;
+  resize: none;
 }
 #userlist{
   width: 100px;
   height: 200px;
+  resize: none;
 }
 #canvas{
   width: 90%;
   height: 300px;
+  border:1px solid #000;
 }

@@ -2,14 +2,13 @@
 <html lang="en" dir="ltr">
   <head>
     <link rel="stylesheet" href="style.css">
-
+    <script src="/socket.io/socket.io.js"></script>
     <meta charset="utf-8">
     <title>Draw contest!</title>
   </head>
   <body>
-    <button id="button_clear" type="button" onclick="clearChat()">Clear</button>
+    <button id="button_clear" type="button" onclick="clearChatAndCanvas()">Clear</button>
 
-      <button id="button_clear" type="button" onclick="draw()">Draw</button>
     <h1>Draw contest</h1>
     <div class="grid-container">
       <div class="grid-item drawingsquare col1 row1">
