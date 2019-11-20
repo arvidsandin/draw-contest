@@ -8,7 +8,7 @@ h1{
 .grid-container{
   display: grid;
   grid-template-columns: 32% 36% 32%;
-  grid-template-rows: 50% auto auto;
+  grid-template-rows: auto auto auto;
   justify-content: space-evenly;
 }
 
@@ -75,7 +75,7 @@ input{
   resize: none;
 }
 #userlist{
-  width: 100px;
+  width: 100%;
   height: 200px;
   resize: none;
 }

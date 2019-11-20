@@ -1,47 +1,58 @@
-
+// ---InitialINITIAL VARIABLES---
 var socket = io();
 
+//Canvas stuff
 var canvas = document.getElementById('canvas');
 canvasResolution = 1000;
 canvas.width = canvasResolution;
 canvas.height = canvasResolution;
 var ctx = canvas.getContext('2d');
-
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
-ctx.lineWidth = 5;
+ctx.lineWidth = 10;
 ctx.strokeStyle = "#000";
 
-canvas.addEventListener('mousedown', () => isDrawing = true);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', () => isDrawing = false);
-canvas.addEventListener('mouseout', () => isDrawing = false);
 var isDrawing = false;
 var lastX = 0;
 var lastY = 0;
 var text = document.getElementById("input_text");
+var userlist = document.getElementById('userlist');
 var username;
 
-// ----------------
+// ---EVENT LISTENERs---
+//Listen to mouse events
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     [lastX, lastY] = [make_relative(e.offsetX), make_relative(e.offsetY)];
   });
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
 
+//Send message when enter is pressed
 text.addEventListener('keydown', (e) => {
   if(e.keyCode==0x0D)
   send();
 });
 
+// ---SOCKET LISTENERS---
+//Send initial info when connection
 socket.on('init', function(conf){
   username = socket.id;
-  console.log(username);
+  socket.emit('connectInfo', {username:username});
 });
 
+//Add user to list when someone has connected
+socket.on('newUser', function(newUser){
+  userlist.value += (newUser + '\n');
+});
+
+//Display new message in chat
 socket.on('message', function(message){
   chat.value += (message.username + ": " + message.text + "\n");
 });
 
+//Sidplay new strokes when someone else draws
 socket.on('stroke', function(stroke){
   ctx.beginPath();
   ctx.moveTo(stroke.lastX, stroke.lastY);
@@ -49,7 +60,9 @@ socket.on('stroke', function(stroke){
   ctx.stroke();
   [lastX, lastY] = [stroke.e.offsetX, stroke.e.offsetY];
 });
-// ---------------
+
+// ---FUNCTIONS---
+//Send message
 function send() {
   var chat = document.getElementById('chat');
   if (text.value != "") {
@@ -77,6 +90,7 @@ function draw(e) {
     [lastX, lastY] = [newX, newY];
   }
 
+//adapt strokes for current canvas size
 function make_relative(a){
   return(a*canvasResolution/canvas.clientWidth)
 }

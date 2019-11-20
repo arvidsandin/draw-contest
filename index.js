@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
+usersOnline=[];
+
 app.use(express.static(__dirname + '/'));
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -10,7 +12,10 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
-  socket.emit('init', {})
+  socket.emit('init', {usersOnline:usersOnline});
+  socket.on('connectInfo', function(info){
+    socket.broadcast.emit('newUser', info.username);
+  });
   socket.on('message', function(message){
     socket.broadcast.emit('message', message);
     socket.emit('message', {text:message.text, username:'You'});
