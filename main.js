@@ -2,8 +2,9 @@
 var socket = io();
 
 var canvas = document.getElementById('canvas');
-canvas.width = canvas.clientWidth;
-canvas.height = canvas.clientHeight;
+canvasResolution = 1000;
+canvas.width = canvasResolution;
+canvas.height = canvasResolution;
 var ctx = canvas.getContext('2d');
 
 ctx.lineJoin = 'round';
@@ -24,7 +25,7 @@ var username;
 // ----------------
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    [lastX, lastY] = [make_relative(e.offsetX), make_relative(e.offsetY)];
   });
 
 text.addEventListener('keydown', (e) => {
@@ -68,8 +69,14 @@ function draw(e) {
     //listen for mouse move event
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
-    ctx.lineTo(e.offsetX, e.offsetY);
-    socket.emit('stroke', {lastX:lastX, lastY:lastY, e:{offsetX:e.offsetX, offsetY:e.offsetY}});
+    var newX = make_relative(e.offsetX);
+    var newY = make_relative(e.offsetY);
+    ctx.lineTo(newX, newY);
+    socket.emit('stroke', {lastX:lastX, lastY:lastY, e:{offsetX:newX, offsetY:newY}});
     ctx.stroke();
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    [lastX, lastY] = [newX, newY];
   }
+
+function make_relative(a){
+  return(a*canvasResolution/canvas.clientWidth)
+}
