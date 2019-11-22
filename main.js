@@ -19,6 +19,7 @@ var text = document.getElementById("input_text");
 var userlist = document.getElementById('userlist');
 var username;
 var canDraw = false;
+var currentWord = null;
 
 // ---EVENT LISTENERs---
 //Listen to mouse events
@@ -54,21 +55,24 @@ socket.on('newUser', function(newUser){
 
 //Display new message in chat
 socket.on('message', function(message){
-  if (message.username != undefined){
-    chat.value += (message.username + ": " + message.text + "\n");
+  if (message.username == null){
+    chat.value += (message.text + "\n");
   }
   else {
-    chat.value += (message.text + "\n");
+    chat.value += (message.username + ": " + message.text + "\n");
   }
 });
 
 //Says if a person is allowed to draw
 socket.on('allowedToDraw', function(allowedToDraw){
+  console.log(allowedToDraw);
   canDraw = allowedToDraw.bool;
   if (canDraw) {
+    currentWord = allowedToDraw.word;
     //Make cursor 'pointer'
   }
   else {
+    currentWord = null;
     //Make cursor 'not-allowed'
   }
 });
