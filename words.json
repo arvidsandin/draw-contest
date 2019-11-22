@@ -1,1 +1,11 @@
-["ball", "heart", "square"]
+["star", "heart",
+  "cat", "dog", "bird", "horse", "tree", "flower",
+  "man", "woman", "child", "family",
+  "eye", "mouth", "nose",
+  "hat", "skirt",
+  "train", "car", "phone",
+  "bed", "chair", "table", "lamp",
+  "house", "window", "door",
+  "flag", "pencil", "book",
+  "sun", "fire", "earth", "mountain",
+  "piano", "guitar", "trumpet"]

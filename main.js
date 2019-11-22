@@ -53,6 +53,7 @@ socket.on('newUser', function(newUser){
   userlist.value += (newUser + '\n');
 });
 
+//// TODO: scroll to bottom
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
@@ -89,7 +90,7 @@ socket.on('stroke', function(stroke){
   [lastX, lastY] = [stroke.e.offsetX, stroke.e.offsetY];
 });
 
-//
+//Clear canvas after correct guess
 socket.on('clearCanvas', function(clear){
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
 });
