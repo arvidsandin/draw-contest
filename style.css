@@ -30,7 +30,7 @@ h1{
 
 .col3 {
   grid-column-start: 3;
-  margin: 0 auto;
+  margin: 0 2%;
 }
 
 .row1 {
@@ -64,9 +64,6 @@ input{
   width: 50px;
   height: inherit;
 }
-.userlist{
-
-}
 #chat{
   font-family: inherit;
   font-size: inherit;
@@ -83,3 +80,6 @@ input{
   width: 90%;
   border:1px solid #000;
 }
+/* #canvas:hover{
+  cursor: not-allowed;
+} */

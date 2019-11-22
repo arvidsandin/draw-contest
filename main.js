@@ -18,6 +18,7 @@ var lastY = 0;
 var text = document.getElementById("input_text");
 var userlist = document.getElementById('userlist');
 var username;
+var canDraw = false;
 
 // ---EVENT LISTENERs---
 //Listen to mouse events
@@ -39,6 +40,10 @@ text.addEventListener('keydown', (e) => {
 //Send initial info when connection
 socket.on('init', function(conf){
   username = socket.id;
+  console.log(conf);
+  for (var i = 0; i < conf.usersOnline.length; i++) {
+    userlist.value += (conf.usersOnline[i] + '\n');
+  }
   socket.emit('connectInfo', {username:username});
 });
 
@@ -49,10 +54,26 @@ socket.on('newUser', function(newUser){
 
 //Display new message in chat
 socket.on('message', function(message){
-  chat.value += (message.username + ": " + message.text + "\n");
+  if (message.username != undefined){
+    chat.value += (message.username + ": " + message.text + "\n");
+  }
+  else {
+    chat.value += (message.text + "\n");
+  }
 });
 
-//Sidplay new strokes when someone else draws
+//Says if a person is allowed to draw
+socket.on('allowedToDraw', function(allowedToDraw){
+  canDraw = allowedToDraw.bool;
+  if (canDraw) {
+    //Make cursor 'pointer'
+  }
+  else {
+    //Make cursor 'not-allowed'
+  }
+});
+
+//Display new strokes when someone else draws
 socket.on('stroke', function(stroke){
   ctx.beginPath();
   ctx.moveTo(stroke.lastX, stroke.lastY);
@@ -77,8 +98,8 @@ function clearChatAndCanvas() {
 }
 
 function draw(e) {
-    // stop the function if they are not mouse down
-    if(!isDrawing) return;
+    // stop the function if they are not mouse down or if not allowed to draw
+    if(!isDrawing || !canDraw) return;
     //listen for mouse move event
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
