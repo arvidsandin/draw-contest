@@ -67,12 +67,15 @@ socket.on('message', function(message){
 socket.on('allowedToDraw', function(allowedToDraw){
   console.log(allowedToDraw);
   canDraw = allowedToDraw.bool;
+  textPlace = document.getElementById('wordToDraw');
   if (canDraw) {
     currentWord = allowedToDraw.word;
+    textPlace.textContent = "You are drawing: " + currentWord;
     //Make cursor 'pointer'
   }
   else {
     currentWord = null;
+    textPlace.textContent = "";
     //Make cursor 'not-allowed'
   }
 });
@@ -84,6 +87,11 @@ socket.on('stroke', function(stroke){
   ctx.lineTo(stroke.e.offsetX, stroke.e.offsetY);
   ctx.stroke();
   [lastX, lastY] = [stroke.e.offsetX, stroke.e.offsetY];
+});
+
+//
+socket.on('clearCanvas', function(clear){
+  ctx.clearRect(0, 0, (canvas.width), (canvas.height))
 });
 
 // ---FUNCTIONS---

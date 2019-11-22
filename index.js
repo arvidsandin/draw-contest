@@ -13,8 +13,6 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
-  console.log('someone connected');
-  console.log(usersOnline);
   if (usersOnline.length == 0){
     currentWord = words[Math.floor(Math.random() * words.length)];
     socket.emit('allowedToDraw', {bool:true, word: currentWord});
@@ -25,6 +23,7 @@ io.on('connection', function(socket){
   socket.emit('init', {usersOnline:usersOnline});
   socket.on('connectInfo', function(info){
     socket.broadcast.emit('newUser', info.username);
+      console.log(info.username + ' connected');
     socket.broadcast.emit('message', {text: info.username + ' has connected', username:null});
     usersOnline.push(info.username);
   });
@@ -32,13 +31,16 @@ io.on('connection', function(socket){
 
   socket.on('message', function(message){
     socket.broadcast.emit('message', message);
-    if (message.text == currentWord) {
-      currentWord = words[Math.floor(Math.random() * words.length)];
-      socket.emit('allowedToDraw', {bool:true, word: currentWord});
-      socket.broadcast.emit('allowedToDraw', {bool:false, word:null});
-    }
     socket.emit('message', {text:message.text, username:'You'});
-    // socket.emit('allowedToDraw', {bool:true});//remove later
+    if (message.text.toLowerCase() == currentWord) {
+      io.emit('message', {text:'Correct!', user:null});
+      socket.broadcast.emit('allowedToDraw', {bool:false, word:null});
+      setTimeout(function(){
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        socket.emit('allowedToDraw', {bool:true, word: currentWord});
+        io.emit('clearCanvas');
+      }, 1500);
+    }
   });
 
   socket.on('stroke', function(stroke){
