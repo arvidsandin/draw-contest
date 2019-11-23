@@ -53,6 +53,15 @@ socket.on('newUser', function(newUser){
   userlist.value += (newUser + '\n');
 });
 
+//Update userlist when someone has disconnected
+socket.on('someoneDisconnected', function(info){
+  chat.value += (info.user) + " has disconnected";
+  userlist.value = "";
+  for (var variable in info.usersOnline) {
+      userlist.value += (newUser + '\n');
+  }
+});
+
 //// TODO: scroll to bottom
 //Display new message in chat
 socket.on('message', function(message){

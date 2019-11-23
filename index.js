@@ -13,6 +13,7 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
+  var username;
   if (usersOnline.length == 0){
     currentWord = words[Math.floor(Math.random() * words.length)];
     socket.emit('allowedToDraw', {bool:true, word: currentWord});
@@ -23,11 +24,27 @@ io.on('connection', function(socket){
   socket.emit('init', {usersOnline:usersOnline});
   socket.on('connectInfo', function(info){
     socket.broadcast.emit('newUser', info.username);
-      console.log(info.username + ' connected');
-    socket.broadcast.emit('message', {text: info.username + ' has connected', username:null});
+    username = info.username;
+    console.log(info.username + ' connected');
+    socket.broadcast.emit('message', {
+      text: info.username + ' has connected', username:null
+    });
     usersOnline.push(info.username);
   });
 
+
+  socket.on('disconnect', (reason) => {
+    if (reason === 'io server disconnect') {
+      socket.connect();
+    }
+    else {
+      console.log(username + " disconnected");
+      usersOnline = usersOnline.filter(e => e !== username);
+      socket.broadcast.emit('someoneDisconnected', {
+        usersOnline:usersOnline, user:username;
+      });
+    }
+  });
 
   socket.on('message', function(message){
     socket.broadcast.emit('message', message);
