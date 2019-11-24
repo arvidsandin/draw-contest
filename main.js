@@ -12,12 +12,14 @@ ctx.lineCap = 'round';
 ctx.lineWidth = 10;
 ctx.strokeStyle = "#000";
 
+//Other variables
 var isDrawing = false;
 var lastX = 0;
 var lastY = 0;
 var text = document.getElementById("input_text");
 var userlist = document.getElementById('userlist');
 var username;
+var id;
 var canDraw = false;
 var currentWord = null;
 
@@ -40,12 +42,13 @@ text.addEventListener('keydown', (e) => {
 // ---SOCKET LISTENERS---
 //Send initial info when connection
 socket.on('init', function(conf){
-  username = socket.id;
-  console.log(conf);
+  username = socket.id.substring(0, 5);
+  id = socket.id;
   for (var i = 0; i < conf.usersOnline.length; i++) {
-    userlist.value += (conf.usersOnline[i] + '\n');
+    userlist.value += (conf.usersOnline[i].username + '\n');
   }
-  socket.emit('connectInfo', {username:username});
+  userlist.value += (username + '\n');
+  socket.emit('connectInfo', {username:username, id:socket.id});
 });
 
 //Add user to list when someone has connected
@@ -55,10 +58,10 @@ socket.on('newUser', function(newUser){
 
 //Update userlist when someone has disconnected
 socket.on('someoneDisconnected', function(info){
-  chat.value += (info.user) + " has disconnected";
+  chat.value += (info.user) + " has disconnected\n";
   userlist.value = "";
-  for (var variable in info.usersOnline) {
-      userlist.value += (newUser + '\n');
+  for (var user in info.usersOnline) {
+      userlist.value += (info.usersOnline[user].username + '\n');
   }
 });
 
@@ -75,15 +78,16 @@ socket.on('message', function(message){
 
 //Says if a person is allowed to draw
 socket.on('allowedToDraw', function(allowedToDraw){
-  console.log(allowedToDraw);
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
   if (canDraw) {
     currentWord = allowedToDraw.word;
-    textPlace.textContent = "You are drawing: " + currentWord;
+    textPlace.textContent = "Your word is: " + currentWord;
+    chat.value += "You are drawing: " + currentWord + "\n";
     //Make cursor 'pointer'
   }
-  else {
+  else if (allowedToDraw.user.id != id){
+    chat.value += allowedToDraw.user.username + " is drawing\n";
     currentWord = null;
     textPlace.textContent = "";
     //Make cursor 'not-allowed'
