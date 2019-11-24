@@ -49,7 +49,7 @@ io.on('connection', function(socket){
       socket.broadcast.emit('someoneDisconnected', {
         usersOnline:usersOnline, user:username
       });
-      if (id == theDrawer.id){
+      if (id == theDrawer.id && usersOnline.length > 0){
         theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
         socket.broadcast.emit('allowedToDraw', {
           bool:false, word:null, user:theDrawer
