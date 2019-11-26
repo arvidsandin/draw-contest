@@ -23,6 +23,6 @@
   "homepage": "https://github.com/arvidsandin/draw-contest#readme",
   "engines": {
     "node": "12.x"
-  },
+  }
 
 }
