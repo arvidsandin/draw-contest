@@ -1,0 +1,28 @@
+{
+  "name": "draw-contest",
+  "version": "1.0.0",
+  "description": "* node.js\r   - [Install link](https://nodejs.org/en/download/)\r * socket.io\r   - `npm install socket.io`\r * express\r   - `npm install express`",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arvidsandin/draw-contest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arvidsandin/draw-contest/issues"
+  },
+  "homepage": "https://github.com/arvidsandin/draw-contest#readme",
+  "engines": {
+    "node": "12.x"
+  },
+
+}
