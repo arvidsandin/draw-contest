@@ -22,7 +22,7 @@ var username;
 var id;
 var canDraw = false;
 var currentWord = null;
-
+var chat = document.getElementById('chat');
 // ---EVENT LISTENERs---
 //Listen to mouse events
 canvas.addEventListener('mousedown', (e) => {
@@ -74,6 +74,7 @@ socket.on('message', function(message){
   else {
     chat.value += (message.username + ": " + message.text + "\n");
   }
+  chat.scrollTop = chat.scrollHeight;
 });
 
 //Says if a person is allowed to draw
@@ -85,13 +86,27 @@ socket.on('allowedToDraw', function(allowedToDraw){
     textPlace.textContent = "Your word is: " + currentWord;
     chat.value += "You are drawing: " + currentWord + "\n";
     //Make cursor 'pointer'
+    // var element = document.getElementById("drawingsquare");
+    // element.classList.remove("col1");
+    // element.classList.add("col2");
+    // var element = document.getElementById("chatarea");
+    // element.classList.remove("col2");
+    // element.classList.add("col1");
+
   }
   else if (allowedToDraw.user.id != id){
     chat.value += allowedToDraw.user.username + " is drawing\n";
     currentWord = null;
     textPlace.textContent = "";
     //Make cursor 'not-allowed'
+    // var element = document.getElementById("drawingsquare");
+    // element.classList.remove("col2");
+    // element.classList.add("col1");
+    // var element = document.getElementById("chatarea");
+    // element.classList.remove("col1");
+    // element.classList.add("col2");
   }
+  chat.scrollTop = chat.scrollHeight;
 });
 
 //Display new strokes when someone else draws
@@ -111,7 +126,6 @@ socket.on('clearCanvas', function(clear){
 // ---FUNCTIONS---
 //Send message
 function send() {
-  var chat = document.getElementById('chat');
   if (text.value != "") {
     socket.emit('message', {text:text.value, username:username});
     text.value = '';

@@ -27,8 +27,8 @@ io.on('connection', function(socket){
     });
     if (usersOnline.length <= 0){
       currentWord = words[Math.floor(Math.random() * words.length)];
-      socket.emit('allowedToDraw', {bool:true, word: currentWord});
       theDrawer = {username:username, id:id};
+      socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
     }
     else {
       socket.emit('allowedToDraw', {
@@ -56,7 +56,7 @@ io.on('connection', function(socket){
         });
         currentWord = words[Math.floor(Math.random() * words.length)];
         io.to(theDrawer.id).emit('allowedToDraw', {
-          bool:true, word:currentWord
+          bool:true, word:currentWord, user:theDrawer
         });
         io.emit('clearCanvas');
       }
@@ -68,10 +68,11 @@ io.on('connection', function(socket){
     socket.emit('message', {text:message.text, username:'You'});
     if (message.text.toLowerCase() == currentWord) {
       io.emit('message', {text:'Correct!', user:null});
+      theDrawer = {username:username, id:id};
       socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
       setTimeout(function(){
         currentWord = words[Math.floor(Math.random() * words.length)];
-        socket.emit('allowedToDraw', {bool:true, word: currentWord});
+        socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
         io.emit('clearCanvas');
       }, 1500);
     }
@@ -83,7 +84,10 @@ io.on('connection', function(socket){
 });
 
 
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 80;
+}
+http.listen(port, function(){
+  console.log('listening on *:80');
 });
