@@ -38,6 +38,11 @@ io.on('connection', function(socket){
     usersOnline.push({username:username, id:id});
   });
 
+  socket.on('clearCanvas', (x) => {
+    if (id == theDrawer.id){
+      io.emit('clearCanvas');
+    }
+  });
 
   socket.on('disconnect', (reason) => {
     if (reason === 'io server disconnect') {
@@ -79,7 +84,9 @@ io.on('connection', function(socket){
   });
 
   socket.on('stroke', function(stroke){
-    socket.broadcast.emit('stroke', stroke);
+    if (id == theDrawer.id){
+      socket.broadcast.emit('stroke', stroke);
+    }
   });
 });
 

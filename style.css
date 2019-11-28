@@ -1,9 +1,21 @@
 * {
   box-sizing: border-box;
+  font: inherit;
 }
 
 h1{
   text-align: center;
+  margin: 0;
+  font-size: 2em ;
+  font-weight: bold;
+  /* font-family: '' */
+}
+
+body{
+  font-family: sans-serif;
+  background: #add8e6;
+  font-size: 16;
+  line-height: 1.3;
 }
 .grid-container{
   display: grid;
@@ -45,12 +57,26 @@ h1{
   grid-row-start: 2;
   grid-row-end: 2;
 }
-
-#button_clear{
+.pAboveCanvas{
+  display: inline-block;
+}
+#wordToDraw{
+  min-height: 16px;
+}
+#button_clear_all{
   opacity: 0;
 }
-#button_clear:hover{
+#button_clear_all:hover{
   opacity: 1;
+}
+#button_clear{
+  width: 90%;
+  height: inherit;
+  margin: auto;
+  display: block;
+}
+#button_clear:hover{
+  cursor: pointer;
 }
 textarea{
 
@@ -81,6 +107,7 @@ input{
 #canvas{
   width: 100%;
   border:1px solid #000;
+  background: white;
 }
 #drawingsquare{
   width: 90%;

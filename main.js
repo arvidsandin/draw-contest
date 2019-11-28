@@ -28,6 +28,7 @@ var chat = document.getElementById('chat');
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     [lastX, lastY] = [make_relative(e.offsetX), make_relative(e.offsetY)];
+    draw(e);
   });
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', () => isDrawing = false);
@@ -81,10 +82,12 @@ socket.on('message', function(message){
 socket.on('allowedToDraw', function(allowedToDraw){
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
+  var clearButton = document.getElementById('button_clear');
   if (canDraw) {
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
     chat.value += "You are drawing: " + currentWord + "\n";
+    clearButton.style.display = "block";
     //Make cursor 'pointer'
     // var element = document.getElementById("drawingsquare");
     // element.classList.remove("col1");
@@ -97,7 +100,8 @@ socket.on('allowedToDraw', function(allowedToDraw){
   else if (allowedToDraw.user.id != id){
     chat.value += allowedToDraw.user.username + " is drawing\n";
     currentWord = null;
-    textPlace.textContent = "";
+    textPlace.textContent = " ";
+    clearButton.style.display = "none";
     //Make cursor 'not-allowed'
     // var element = document.getElementById("drawingsquare");
     // element.classList.remove("col2");
@@ -130,6 +134,10 @@ function send() {
     socket.emit('message', {text:text.value, username:username});
     text.value = '';
   }
+}
+
+function clearCanvas() {
+  socket.emit('clearCanvas', {});
 }
 
 function clearChatAndCanvas() {

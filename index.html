@@ -7,27 +7,33 @@
     <title>Draw contest!</title>
   </head>
   <body>
-    <button id="button_clear" type="button" onclick="clearChatAndCanvas()">Clear</button>
+    <button id="button_clear_all" type="button" onclick="clearChatAndCanvas()">Clear</button>
 
     <h1>Draw contest</h1>
     <div class="grid-container">
-      <div class="grid-item drawingsquare col2 row1" id="drawingsquare">
-        <p id="wordToDraw">You are drawing: </p>
-        <canvas id="canvas"></canvas>
-      </div>
-      <div class="grid-item chat col3 row1" id="chatarea">
-        <textarea readonly id="chat"></textarea>
-      </div>
-      <br>
-
-      <div class="grid-item col3 row2">
-        <input type="text" id="input_text"><button id="send" type="button" onclick="send()">Send</button>
-      </div>
-
       <div class="grid-item col1 row1">
         <p id="users">Users</p>
         <textarea readonly id="userlist"></textarea>
       </div>
+
+      <div class="grid-item drawingsquare col2 row1" id="drawingsquare">
+        <div class="pAboveCanvas">
+          <p id="wordToDraw"></p>
+        </div>
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="grid-item col2 row2">
+        <button id="button_clear" type:"button" onclick="clearCanvas()">Clear</button>
+      </div>
+
+      <div class="grid-item chat col3 row1" id="chatarea">
+        <textarea readonly id="chat"></textarea>
+      </div>
+      <br>
+      <div class="grid-item col3 row2">
+        <input type="text" id="input_text"><button id="send" type="button" onclick="send()">Send</button>
+      </div>
+
     </div>
     <script src="main.js">
     </script>
