@@ -19,8 +19,8 @@ body{
 }
 .grid-container{
   display: grid;
-  grid-template-columns: 32% 36% 32%;
-  grid-template-rows: 80% 20%;
+  grid-template-columns: 25% 43% 32%;
+  grid-template-rows: 70vh 30vh;
   justify-content: space-evenly;
 }
 
@@ -70,7 +70,7 @@ body{
   opacity: 1;
 }
 #button_clear{
-  width: 90%;
+  width: 100%;
   height: inherit;
   margin: auto;
   display: block;
@@ -78,8 +78,8 @@ body{
 #button_clear:hover{
   cursor: pointer;
 }
-textarea{
-
+#chatarea{
+  height: 100%;
 }
 input{
    font-family: inherit;
@@ -108,11 +108,13 @@ input{
   width: 100%;
   border:1px solid #000;
   background: white;
+  max-height: 70vh;
 }
 #drawingsquare{
-  width: 90%;
+  padding-left: 5%;
+  padding-right: 5%;
+  height: 100%
   margin: auto;
-  /* padding-top: 100%; */
 }
 /* #canvas:hover{
   cursor: not-allowed;
