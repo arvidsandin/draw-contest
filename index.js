@@ -6,10 +6,12 @@ var words = require('./words.json');
 var currentWord = "";
 var usersOnline=[];
 var theDrawer = {username:null, id:null};
+var brushColor = "#000";
+var brushSize = 10;
 
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 
@@ -54,6 +56,8 @@ io.on('connection', function(socket){
       socket.broadcast.emit('someoneDisconnected', {
         usersOnline:usersOnline, user:username
       });
+      var brushColor = "#000";
+      var brushSize = 10;
       if (id == theDrawer.id && usersOnline.length > 0){
         theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
         socket.broadcast.emit('allowedToDraw', {
