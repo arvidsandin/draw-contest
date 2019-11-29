@@ -46,23 +46,23 @@ socket.on('init', function(conf){
   username = socket.id.substring(0, 5);
   id = socket.id;
   for (var i = 0; i < conf.usersOnline.length; i++) {
-    userlist.value += (conf.usersOnline[i].username + '\n');
+    userlist.innerHTML += (conf.usersOnline[i].username + '<br>');
   }
-  userlist.value += (username + '\n');
+  userlist.innerHTML += (username + '<br>');
   socket.emit('connectInfo', {username:username, id:socket.id});
 });
 
 //Add user to list when someone has connected
 socket.on('newUser', function(newUser){
-  userlist.value += (newUser + '\n');
+  userlist.innerHTML += (newUser + '<br>');
 });
 
 //Update userlist when someone has disconnected
 socket.on('someoneDisconnected', function(info){
   chat.value += (info.user) + " has disconnected\n";
-  userlist.value = "";
+  userlist.innerHTML = "";
   for (var user in info.usersOnline) {
-      userlist.value += (info.usersOnline[user].username + '\n');
+      userlist.innerHTML += (info.usersOnline[user].username + '<br>');
   }
 });
 

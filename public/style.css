@@ -72,9 +72,14 @@ body{
   opacity: 1;
 }
 
-
+.textbox{
+  overflow: auto;
+  background-color: #e8f4f8;
+  border: 1px solid black;
+}
 #userlist{
-  width: 100%;
+  margin: 3px 3px;
+  width: 95%;
   height: 200px;
   resize: none;
 }
@@ -91,7 +96,7 @@ body{
 #canvas{
   max-width: 100%;
   border:1px solid #000;
-  background: white;
+  background: #FEFEFE;
   max-height: calc(100% - 46px);
 }
 /* TODO: make button as wide as canvas on wide displays */
@@ -116,6 +121,7 @@ body{
   width: 100%;
   height: 100%;
   resize: none;
+  background: #e8f4f8;
 }
 input{
    font-family: inherit;
