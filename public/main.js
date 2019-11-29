@@ -4,7 +4,7 @@ var socket = io();
 //Canvas stuff
 var canvas = document.getElementById('canvas');
 canvasResolution = 1000;
-canvas.width = canvasResolution;
+canvas.width = canvasResolution*1.4;
 canvas.height = canvasResolution;
 var ctx = canvas.getContext('2d');
 ctx.lineJoin = 'round';
@@ -161,5 +161,5 @@ function draw(e) {
 
 //adapt strokes for current canvas size
 function make_relative(a){
-  return(a*canvasResolution/canvas.clientWidth)
+  return(a*canvasResolution/canvas.clientHeight)
 }
