@@ -8,13 +8,19 @@
   </head>
   <body>
     <button id="button_black" type="button" class="color_button" onclick="changeColor('#000')">Black</button>
-    <button id="button_red" type="button" class="color_button" onclick="changeColor('#F00')">Red</button>
+    <button id="button_red" type="button" class="color_button" onclick="changeColor('#FF0000')">Red</button>
     <button id="button_green" type="button" class="color_button" onclick="changeColor('#0F0')">Green</button>
     <button id="button_blue" type="button" class="color_button" onclick="changeColor('#00F')">Blue</button>
     <button id="button_cyan" type="button" class="color_button" onclick="changeColor('#0FF')">Cyan</button>
     <button id="button_magenta" type="button" class="color_button" onclick="changeColor('#F0F')">Magenta</button>
     <button id="button_yellow" type="button" class="color_button" onclick="changeColor('#FF0')">Yellow</button>
     <button id="button_white" type="button" class="color_button" onclick="changeColor('#FFF')">White</button>
+    <br>
+    <button id="button_small" type="button" class="color_button" onclick="changeBrushSize(5)">Small</button>
+    <button id="button_medium" type="button" class="color_button" onclick="changeBrushSize(10)">Medium</button>
+    <button id="button_large" type="button" class="color_button" onclick="changeBrushSize(20)">Big</button>
+    <button id="button_huge" type="button" class="color_button" onclick="changeBrushSize(50)">Huge</button>
+
 
     <h1>Draw contest</h1>
     <div class="grid-container">
@@ -23,6 +29,7 @@
         <div class="textbox">
           <p id="userlist"></p>
         </div>
+
       </div>
 
       <div class="grid-item drawingarea col2 row1_2" id="drawingsarea">
@@ -33,8 +40,6 @@
         <canvas id="canvas"></canvas>
         <br>
         <button id="button_clear" type:"button" onclick="clearCanvas()">Clear</button>
-      </div>
-      <div class="grid-item col2 row2">
       </div>
 
       <div class="grid-item chat col3 row1" id="chatarea">

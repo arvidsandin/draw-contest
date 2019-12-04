@@ -55,7 +55,6 @@ body{
 }
 
 .row2 {
-  height: 30px;
   grid-row-start: 2;
   grid-row-end: 2;
 }
@@ -65,12 +64,7 @@ body{
 #wordToDraw{
   min-height: 16px;
 }
-.color_button{
-  opacity: 0;
-}
-.color_button:hover{
-  opacity: 1;
-}
+
 
 .textbox{
   overflow: auto;
@@ -127,12 +121,12 @@ input{
    font-family: inherit;
    font-size: inherit;
    width: calc(100% - 62px);
-   height: inherit;
+   height: 30px;
 }
 #send{
   float: right;
   width: 60px;
-  height: inherit;
+  height: 30px;
 }
 /* #canvas:hover{
   cursor: not-allowed;
