@@ -7,7 +7,14 @@
     <title>Draw contest!</title>
   </head>
   <body>
-    <button id="button_clear_all" type="button" onclick="clearChatAndCanvas()">Clear</button>
+    <button id="button_black" type="button" class="color_button" onclick="changeColor('#000')">Black</button>
+    <button id="button_red" type="button" class="color_button" onclick="changeColor('#F00')">Red</button>
+    <button id="button_green" type="button" class="color_button" onclick="changeColor('#0F0')">Green</button>
+    <button id="button_blue" type="button" class="color_button" onclick="changeColor('#00F')">Blue</button>
+    <button id="button_cyan" type="button" class="color_button" onclick="changeColor('#0FF')">Cyan</button>
+    <button id="button_magenta" type="button" class="color_button" onclick="changeColor('#F0F')">Magenta</button>
+    <button id="button_yellow" type="button" class="color_button" onclick="changeColor('#FF0')">Yellow</button>
+    <button id="button_white" type="button" class="color_button" onclick="changeColor('#FFF')">White</button>
 
     <h1>Draw contest</h1>
     <div class="grid-container">

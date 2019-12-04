@@ -18,7 +18,7 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   var username;
   var id;
-  socket.emit('init', {usersOnline:usersOnline});
+  socket.emit('init', {usersOnline:usersOnline, brushSize:brushSize, brushColor:brushColor});
   socket.on('connectInfo', function(info){
     socket.broadcast.emit('newUser', info.username);
     username = info.username;
@@ -56,8 +56,9 @@ io.on('connection', function(socket){
       socket.broadcast.emit('someoneDisconnected', {
         usersOnline:usersOnline, user:username
       });
-      var brushColor = "#000";
-      var brushSize = 10;
+      brushColor = "#000";
+      brushSize = 10;
+      socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
       if (id == theDrawer.id && usersOnline.length > 0){
         theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
         socket.broadcast.emit('allowedToDraw', {
@@ -91,6 +92,12 @@ io.on('connection', function(socket){
     if (id == theDrawer.id){
       socket.broadcast.emit('stroke', stroke);
     }
+  });
+
+  socket.on('changeBrush', function(brush){
+    brushColor = brush.color;
+    brushSize = brush.size;
+    socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
   });
 });
 

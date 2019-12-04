@@ -65,10 +65,10 @@ body{
 #wordToDraw{
   min-height: 16px;
 }
-#button_clear_all{
+.color_button{
   opacity: 0;
 }
-#button_clear_all:hover{
+.color_button:hover{
   opacity: 1;
 }
 
