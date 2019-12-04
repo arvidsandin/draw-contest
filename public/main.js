@@ -84,11 +84,15 @@ socket.on('allowedToDraw', function(allowedToDraw){
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
   var clearButton = document.getElementById('button_clear');
+  var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
     chat.value += "You are drawing: " + currentWord + "\n";
-    clearButton.style.display = "block";
+    clearButton.style.display = "inline";
+    for (i = 0; i < modifyers.length; i++) {
+      modifyers[i].style.display = "inline";
+    };
     //Make cursor 'pointer'
   }
   else if (allowedToDraw.user.id != id){
@@ -96,6 +100,9 @@ socket.on('allowedToDraw', function(allowedToDraw){
     currentWord = null;
     textPlace.textContent = " ";
     clearButton.style.display = "none";
+    for (i = 0; i < modifyers.length; i++) {
+      modifyers[i].style.display = "none";
+    };
     //Make cursor 'not-allowed'
   }
   chat.scrollTop = chat.scrollHeight;
