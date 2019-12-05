@@ -56,7 +56,7 @@ socket.on('init', function(conf){
 
 //Add user to list when someone has connected
 socket.on('newUser', function(newUser){
-  userlist.innerHTML += (newUser + '<br>');
+  userlist.innerHTML += (newUser.htmlusername + '<br>');
 });
 
 //Update userlist when someone has disconnected
@@ -64,8 +64,13 @@ socket.on('someoneDisconnected', function(info){
   chat.value += (info.user) + " has disconnected\n";
   userlist.innerHTML = "";
   for (var user in info.usersOnline) {
-      userlist.innerHTML += (info.usersOnline[user].username + '<br>');
+      userlist.innerHTML += (info.usersOnline[user].htmlusername + '<br>');
   };
+});
+
+socket.on('disconnect', (reason) => {
+    chat.value += "You have disconnected\n";
+    userlist.innerHTML = "";
 });
 
 //Display new message in chat
@@ -74,7 +79,7 @@ socket.on('message', function(message){
     chat.value += (message.text + "\n");
   }
   else {
-    chat.value += (message.username + ": " + message.text + "\n");
+    chat.value += message.username + ": " + message.text + "\n";
   }
   chat.scrollTop = chat.scrollHeight;
 });
