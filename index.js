@@ -62,19 +62,21 @@ io.on('connection', function(socket){
       socket.broadcast.emit('someoneDisconnected', {
         usersOnline:usersOnline, user:username
       });
-      brushColor = "#000";
-      brushSize = 10;
-      socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
-      if (id == theDrawer.id && usersOnline.length > 0){
-        theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
-        socket.broadcast.emit('allowedToDraw', {
-          bool:false, word:null, user:theDrawer
-        });
-        currentWord = words[Math.floor(Math.random() * words.length)];
-        io.to(theDrawer.id).emit('allowedToDraw', {
-          bool:true, word:currentWord, user:theDrawer
-        });
-        io.emit('clearCanvas');
+      if (id == theDrawer.id){
+        brushColor = "#000";
+        brushSize = 10;
+        socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
+        if (usersOnline.length > 0){
+          theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
+          socket.broadcast.emit('allowedToDraw', {
+            bool:false, word:null, user:theDrawer
+          });
+          currentWord = words[Math.floor(Math.random() * words.length)];
+          io.to(theDrawer.id).emit('allowedToDraw', {
+            bool:true, word:currentWord, user:theDrawer
+          });
+          io.emit('clearCanvas');
+        }
       }
     }
   });
