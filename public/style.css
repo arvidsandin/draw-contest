@@ -27,6 +27,7 @@ body{
 
 .grid-item {
   padding: 7px 5px;
+  cursor:default;
 }
 
 .col1 {
@@ -79,6 +80,16 @@ body{
   resize: none;
 }
 
+.brush_modifyer{
+  padding: 4%;
+  margin: 5px 0 0 1px;
+  border: 2px solid #000;
+  border-radius: 20%;
+}
+.brush_modifyer:hover{
+  cursor: pointer;
+}
+
 #drawingarea{
   /* padding-left: 5%; */
   /* padding-right: 5%; */
@@ -90,7 +101,7 @@ body{
 }
 #canvas{
   max-width: 100%;
-  border:1px solid #000;
+  border: 1px solid #000;
   background: #FEFEFE;
   max-height: calc(100% - 46px);
 }
@@ -98,13 +109,11 @@ body{
 #button_clear{
   width: 100%;
   height: 30px;
-  height: inherit;
   margin: auto;
   display: block;
 }
 #button_clear:hover{
   cursor: pointer;
-  height: 30px;
 }
 
 #chatarea{
@@ -128,6 +137,9 @@ input{
   float: right;
   width: 60px;
   height: 30px;
+}
+#send:hover{
+  cursor: pointer;
 }
 /* #canvas:hover{
   cursor: not-allowed;

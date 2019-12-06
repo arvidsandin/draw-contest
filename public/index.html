@@ -16,19 +16,22 @@
         <div class="textbox">
           <p id="userlist"></p>
         </div>
-        <button id="button_black" type="button" class="brush_modifyer" onclick="changeColor('#000')">Black</button>
-        <button id="button_red" type="button" class="brush_modifyer" onclick="changeColor('#FF0000')">Red</button>
-        <button id="button_green" type="button" class="brush_modifyer" onclick="changeColor('#0F0')">Green</button>
-        <button id="button_blue" type="button" class="brush_modifyer" onclick="changeColor('#00F')">Blue</button>
-        <button id="button_cyan" type="button" class="brush_modifyer" onclick="changeColor('#0FF')">Cyan</button>
-        <button id="button_magenta" type="button" class="brush_modifyer" onclick="changeColor('#F0F')">Magenta</button>
-        <button id="button_yellow" type="button" class="brush_modifyer" onclick="changeColor('#FF0')">Yellow</button>
-        <button id="button_white" type="button" class="brush_modifyer" onclick="changeColor('#FFF')">White</button>
+        <button class="brush_modifyer" onclick="changeColor('#000000')" style="background: #000" id="button_black"></button>
+        <button class="brush_modifyer" onclick="changeColor('#FF0000')" style="background: #F00" id="button_red"></button>
+        <button class="brush_modifyer" onclick="changeColor('#FFA500 ')" style="background: #FFA500 "id="button_orange"></button>
+        <button class="brush_modifyer" onclick="changeColor('#FFFF00')" style="background: #FFFF00"id="button_yellow"></button>
+        <button class="brush_modifyer" onclick="changeColor('##7CFC00')" style="background: #7CFC00"id="button_lightgreen"></button>
+        <button class="brush_modifyer" onclick="changeColor('#228B22')" style="background: #228B22"id="button_darkgreen"></button>
+        <button class="brush_modifyer" onclick="changeColor('#87CEEB')" style="background: #87CEEB"id="button_skyblue"></button>
+        <button class="brush_modifyer" onclick="changeColor('#00008B')" style="background: #00008B"id="button_darkblue"></button>
+        <button class="brush_modifyer" onclick="changeColor('#800080')" style="background: #800080"id="button_purple"></button>
+        <button class="brush_modifyer" onclick="changeColor('#FF69B4')" style="background: #FF69B4"id="button_hotpink"></button>
+        <button class="brush_modifyer" onclick="changeColor('#FFFFFF')" style="background: #FFFFFF"id="button_white"></button>
         <br>
-        <button id="button_small" type="button" class="brush_modifyer" onclick="changeBrushSize(5)">Small</button>
-        <button id="button_medium" type="button" class="brush_modifyer" onclick="changeBrushSize(10)">Medium</button>
-        <button id="button_large" type="button" class="brush_modifyer" onclick="changeBrushSize(20)">Big</button>
-        <button id="button_huge" type="button" class="brush_modifyer" onclick="changeBrushSize(50)">Huge</button>
+        <button class="brush_modifyer" onclick="changeBrushSize(05)" style="background: "id="button_small"></button>
+        <button class="brush_modifyer" onclick="changeBrushSize(10)" style="background: "id="button_medium"></button>
+        <button class="brush_modifyer" onclick="changeBrushSize(20)" style="background: "id="button_large"></button>
+        <button class="brush_modifyer" onclick="changeBrushSize(50)" style="background: "id="button_huge"></button>
       </div>
 
       <div class="grid-item drawingarea col2 row1_2" id="drawingsarea">

@@ -101,9 +101,11 @@ io.on('connection', function(socket){
   });
 
   socket.on('changeBrush', function(brush){
-    brushColor = brush.color;
-    brushSize = brush.size;
-    socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
+    if (id == theDrawer.id){
+      brushColor = brush.color;
+      brushSize = brush.size;
+      socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
+    }
   });
 });
 
