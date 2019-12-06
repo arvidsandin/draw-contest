@@ -49,12 +49,14 @@ socket.on('init', function(conf){
     userlist.innerHTML += (conf.usersOnline[i].username + '<br>');
   }
   userlist.innerHTML += (username + '<br>');
+  ctx.lineWidth = conf.brushSize;
+  ctx.strokeStyle = conf.brushColor;
   socket.emit('connectInfo', {username:username, id:socket.id});
 });
 
 //Add user to list when someone has connected
 socket.on('newUser', function(newUser){
-  userlist.innerHTML += (newUser + '<br>');
+  userlist.innerHTML += (newUser.htmlusername + '<br>');
 });
 
 //Update userlist when someone has disconnected
@@ -62,18 +64,22 @@ socket.on('someoneDisconnected', function(info){
   chat.value += (info.user) + " has disconnected\n";
   userlist.innerHTML = "";
   for (var user in info.usersOnline) {
-      userlist.innerHTML += (info.usersOnline[user].username + '<br>');
-  }
+      userlist.innerHTML += (info.usersOnline[user].htmlusername + '<br>');
+  };
 });
 
-//// TODO: scroll to bottom
+socket.on('disconnect', (reason) => {
+    chat.value += "You have disconnected\n";
+    userlist.innerHTML = "";
+});
+
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
     chat.value += (message.text + "\n");
   }
   else {
-    chat.value += (message.username + ": " + message.text + "\n");
+    chat.value += message.username + ": " + message.text + "\n";
   }
   chat.scrollTop = chat.scrollHeight;
 });
@@ -83,32 +89,26 @@ socket.on('allowedToDraw', function(allowedToDraw){
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
   var clearButton = document.getElementById('button_clear');
+  var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
     chat.value += "You are drawing: " + currentWord + "\n";
-    clearButton.style.display = "block";
+    clearButton.style.display = "inline";
+    for (i = 0; i < modifyers.length; i++) {
+      modifyers[i].style.display = "inline";
+    };
     //Make cursor 'pointer'
-    // var element = document.getElementById("drawingsquare");
-    // element.classList.remove("col1");
-    // element.classList.add("col2");
-    // var element = document.getElementById("chatarea");
-    // element.classList.remove("col2");
-    // element.classList.add("col1");
-
   }
   else if (allowedToDraw.user.id != id){
     chat.value += allowedToDraw.user.username + " is drawing\n";
     currentWord = null;
     textPlace.textContent = " ";
     clearButton.style.display = "none";
+    for (i = 0; i < modifyers.length; i++) {
+      modifyers[i].style.display = "none";
+    };
     //Make cursor 'not-allowed'
-    // var element = document.getElementById("drawingsquare");
-    // element.classList.remove("col2");
-    // element.classList.add("col1");
-    // var element = document.getElementById("chatarea");
-    // element.classList.remove("col1");
-    // element.classList.add("col2");
   }
   chat.scrollTop = chat.scrollHeight;
 });
@@ -127,6 +127,11 @@ socket.on('clearCanvas', function(clear){
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
 });
 
+socket.on('changeBrush', function(brush) {
+  ctx.strokeStyle =  brush.color;
+  ctx.lineWidth =  brush.size;
+});
+
 // ---FUNCTIONS---
 //Send message
 function send() {
@@ -134,6 +139,15 @@ function send() {
     socket.emit('message', {text:text.value, username:username});
     text.value = '';
   }
+}
+
+function changeColor(newColor) {
+  ctx.strokeStyle =  newColor;
+  socket.emit('changeBrush', {color:newColor, size:ctx.lineWidth});
+}
+function changeBrushSize(newSize) {
+  ctx.lineWidth =  newSize;
+  socket.emit('changeBrush', {color:ctx.strokeStyle, size:newSize});
 }
 
 function clearCanvas() {
