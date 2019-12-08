@@ -82,8 +82,9 @@ io.on('connection', function(socket){
   });
 
   socket.on('message', function(message){
-    socket.broadcast.emit('message', message);
-    socket.emit('message', {text:message.text, username:'You'});
+    text = encodeHTML(message.text);
+    socket.broadcast.emit('message', {text:text, username:encodeHTML(message.username)});
+    socket.emit('message', {text:text, username:'You'});
     if (message.text.toLowerCase() == currentWord) {
       io.emit('message', {text:'Correct!', user:null});
       theDrawer = {username:username, id:id};

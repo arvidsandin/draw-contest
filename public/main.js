@@ -61,7 +61,7 @@ socket.on('newUser', function(newUser){
 
 //Update userlist when someone has disconnected
 socket.on('someoneDisconnected', function(info){
-  chat.value += (info.user) + " has disconnected\n";
+  chat.innerHTML += (info.user) + " has disconnected<br>";
   userlist.innerHTML = "";
   for (var user in info.usersOnline) {
       userlist.innerHTML += (info.usersOnline[user].htmlusername + '<br>');
@@ -69,17 +69,17 @@ socket.on('someoneDisconnected', function(info){
 });
 
 socket.on('disconnect', (reason) => {
-    chat.value += "You have disconnected\n";
+    chat.innerHTML += "You have disconnected<br>";
     userlist.innerHTML = "";
 });
 
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
-    chat.value += (message.text + "\n");
+    chat.innerHTML += (message.text + "<br>");
   }
   else {
-    chat.value += message.username + ": " + message.text + "\n";
+    chat.innerHTML += message.username + ": " + message.text + "<br>";
   }
   chat.scrollTop = chat.scrollHeight;
 });
@@ -93,7 +93,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
   if (canDraw) {
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
-    chat.value += "You are drawing: " + currentWord + "\n";
+    chat.innerHTML += "You are drawing: " + currentWord + "<br>";
     clearButton.style.display = "inline";
     for (i = 0; i < modifyers.length; i++) {
       modifyers[i].style.display = "inline";
@@ -101,7 +101,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
     //Make cursor 'pointer'
   }
   else if (allowedToDraw.user.id != id){
-    chat.value += allowedToDraw.user.username + " is drawing\n";
+    chat.innerHTML += allowedToDraw.user.username + " is drawing<br>";
     currentWord = null;
     textPlace.textContent = " ";
     clearButton.style.display = "none";
