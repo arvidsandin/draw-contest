@@ -56,11 +56,16 @@ body{
   grid-row-end: 1;
 }
 
+#users{
+  line-height: 21px;
+}
+
 .pAboveCanvas{
   display: inline-block;
 }
 #wordToDraw{
   min-height: 16px;
+  line-height: 21px;
 }
 
 
