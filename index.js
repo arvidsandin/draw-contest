@@ -65,7 +65,8 @@ io.on('connection', function(socket){
       if (id == theDrawer.id){
         brushColor = "#000";
         brushSize = 10;
-        socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
+        io.emit('changeBrush', {color:brushColor, size:brushSize});
+        // If there are people left, randomize a new drawer
         if (usersOnline.length > 0){
           theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
           socket.broadcast.emit('allowedToDraw', {
@@ -89,6 +90,7 @@ io.on('connection', function(socket){
       io.emit('message', {text:'Correct!', user:null});
       theDrawer = {username:username, id:id};
       socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
+      io.emit('changeBrush', {color:'#000', size:10});
       setTimeout(function(){
         currentWord = words[Math.floor(Math.random() * words.length)];
         socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
@@ -107,7 +109,7 @@ io.on('connection', function(socket){
     if (id == theDrawer.id){
       brushColor = brush.color;
       brushSize = brush.size;
-      socket.broadcast.emit('changeBrush', {color:brushColor, size:brushSize});
+      io.emit('changeBrush', {color:brushColor, size:brushSize});
     }
   });
 });

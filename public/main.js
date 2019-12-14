@@ -142,11 +142,9 @@ function send() {
 }
 
 function changeColor(newColor) {
-  ctx.strokeStyle =  newColor;
   socket.emit('changeBrush', {color:newColor, size:ctx.lineWidth});
 }
 function changeBrushSize(newSize) {
-  ctx.lineWidth =  newSize;
   socket.emit('changeBrush', {color:ctx.strokeStyle, size:newSize});
 }
 
