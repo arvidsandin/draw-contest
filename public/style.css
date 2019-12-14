@@ -14,14 +14,14 @@ h1{
 
 body{
   font-family: sans-serif;
-  background: #add8e6;
+  background: #ADD8E6;
   font-size: 16;
   line-height: 1.3;
 }
 .grid-container{
   display: grid;
   grid-template-columns: 25% 43% 32%;
-  grid-template-rows: 70vh;
+  /* grid-template-rows: 70vh; */
   justify-content: space-evenly;
 }
 
@@ -66,7 +66,7 @@ body{
 
 .textbox{
   overflow: auto;
-  background-color: #e8f4f8;
+  background-color: #E8F4F8;
   border: 1px solid black;
 }
 #userlist{
@@ -84,6 +84,7 @@ body{
   height: 0;
   width:0;
   position: relative;
+  background: #E8F4F8;
 }
 .brush_modifyer:hover{
   cursor: pointer;
@@ -135,6 +136,7 @@ body{
   border: 1px solid #000;
   background: #FFFFFF;
   max-height: calc(100% - 46px);
+  touch-action: pinch-zoom;
 }
 /* TODO: make button as wide as canvas on wide displays */
 #button_clear{
@@ -172,10 +174,13 @@ input{
   cursor: pointer;
 }
 
-#bottom_row{
-  background: #9dc8d6;
-  position: absolute;
+footer{
+  position: fixed;
   bottom: 0;
   left:0;
-  width: 100%
+  width: 100%;
+  background: #9DC8D6;
+}
+#bottom_row{
+  margin: 3px 15px;
 }
