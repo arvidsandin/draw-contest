@@ -60,13 +60,14 @@ body{
   margin: 12px 0;
 }
 
+/* TODO: make canvas not move when a second player connects after time has run out */
 .pAboveCanvas{
   display: inline;
   width: 100%;
   overflow: hidden;
 }
 #wordToDraw{
-  min-height: 16px;
+  min-height: 21px;
   line-height: 21px;
   float: left;
   margin: 12px 0;

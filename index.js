@@ -8,7 +8,7 @@ var usersOnline=[];
 var theDrawer = {username:null, id:null};
 var brushColor = "#000";
 var brushSize = 10;
-var timeLeft = 121;
+var timeLeft = 13;
 
 
 app.use(express.static(__dirname + '/public'));
@@ -18,13 +18,17 @@ app.get('/', function(req, res){
 
 setInterval(function(){
   timeLeft -= 1;
-  if (timeLeft == 0 && usersOnline.length > 0) {
+  if (timeLeft < 0 && usersOnline.length > 1) {
+    timeLeft = 13;
     io.emit('message', {
       text: 'Time ran out! Randomizing new drawer...', username:null
     });
     io.emit('changeBrush', {color:'#000', size:10});
-    // If there are people left, randomize a new drawer
-    theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
+    var theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)]
+    while (theDrawer == theNewDrawer) {
+      theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
+    }
+    theDrawer = theNewDrawer;
     io.emit('allowedToDraw', {
       bool:false, word:null, user:theDrawer
     });
@@ -34,7 +38,7 @@ setInterval(function(){
         bool:true, word:currentWord, user:theDrawer
       });
       io.emit('clearCanvas');
-      timeLeft = 121;
+      timeLeft = 13;
       io.emit('timeLeft', {time: timeLeft});
     }, 1500);
   }
@@ -67,7 +71,7 @@ io.on('connection', function(socket){
       currentWord = words[Math.floor(Math.random() * words.length)];
       theDrawer = {username:username, id:id};
       socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
-      timeLeft = 121;
+      timeLeft = 13;
       io.emit('timeLeft', {time: timeLeft});
     }
     else {
@@ -125,7 +129,7 @@ io.on('connection', function(socket){
         currentWord = words[Math.floor(Math.random() * words.length)];
         socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
         io.emit('clearCanvas');
-        timeLeft = 121;
+        timeLeft = 13;
         io.emit('timeLeft', {time: timeLeft});
       }, 1500);
     }
