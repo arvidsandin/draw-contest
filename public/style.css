@@ -48,7 +48,6 @@ body{
 .col3 {
   grid-column-start: 3;
   grid-column-end: 3;
-  margin: 0 2%;
 }
 
 .row1 {
@@ -58,14 +57,26 @@ body{
 
 #users{
   line-height: 21px;
+  margin: 12px 0;
 }
 
 .pAboveCanvas{
-  display: inline-block;
+  display: inline;
+  width: 100%;
+  overflow: hidden;
 }
 #wordToDraw{
   min-height: 16px;
   line-height: 21px;
+  float: left;
+  margin: 12px 0;
+}
+#timer{
+  min-height: 16px;
+  line-height: 21px;
+  float: right;
+  margin: 12px 0;
+  /* text-align: right; */
 }
 
 
