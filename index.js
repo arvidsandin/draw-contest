@@ -23,7 +23,7 @@ setInterval(function(){
     io.emit('message', {
       text: 'Time ran out! Randomizing new drawer...', username:null
     });
-    io.emit('changeBrush', {color:'#000', size:10});
+    resetBrush();
     var theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)]
     while (theDrawer == theNewDrawer) {
       theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
@@ -99,7 +99,7 @@ io.on('connection', function(socket){
         usersOnline:usersOnline, user:username
       });
       if (id == theDrawer.id){
-        io.emit('changeBrush', {color:'#000', size:10});
+        resetBrush();
         // If there are people left, randomize a new drawer
         if (usersOnline.length > 0){
           theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
@@ -124,7 +124,7 @@ io.on('connection', function(socket){
       io.emit('message', {text:'Correct!', user:null});
       theDrawer = {username:username, id:id};
       socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
-      io.emit('changeBrush', {color:'#000', size:10});
+      resetBrush();
       currentWord = words[Math.floor(Math.random() * words.length)];
       setTimeout(function(){
         socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
@@ -161,4 +161,10 @@ http.listen(port, function(){
 
 function encodeHTML(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+}
+
+function resetBrush(){
+  brushColor = '#000';
+  brushSize = 10;
+  io.emit('changeBrush', {color:brushColor, size:brushSize});
 }
