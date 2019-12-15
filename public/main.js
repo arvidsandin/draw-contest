@@ -92,7 +92,8 @@ socket.on('message', function(message){
   else {
     chat.innerHTML += message.username + ": " + message.text + "<br>";
   }
-  chat.scrollTop = chat.scrollHeight;
+  textbox = document.getElementById('textbox');
+  textbox.scrollTop = textbox.scrollHeight;
 });
 
 //If you are the drawer show brush tools and your word, otherwise hide them

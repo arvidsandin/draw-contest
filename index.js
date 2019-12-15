@@ -125,8 +125,8 @@ io.on('connection', function(socket){
       theDrawer = {username:username, id:id};
       socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
       io.emit('changeBrush', {color:'#000', size:10});
+      currentWord = words[Math.floor(Math.random() * words.length)];
       setTimeout(function(){
-        currentWord = words[Math.floor(Math.random() * words.length)];
         socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
         io.emit('clearCanvas');
         timeLeft = 121;
