@@ -48,7 +48,7 @@ setInterval(function(){
   if (timeLeft < -1) {
     timer.style.display = 'none';
   }
-  timer.innerHTML = 'Time left: '+(Math.floor(timeLeft / 60)).toString() + ':' + (Math.floor(timeLeft % 60)).toString();
+  timer.innerHTML = 'Time left: 0'+(Math.floor(timeLeft / 60)) + ':' + (('0'+(Math.floor(timeLeft % 60))).slice(-2));
 }, 1000);
 
 // ---SOCKET LISTENERS---
@@ -145,7 +145,6 @@ socket.on('changeBrush', function(brush) {
 
 socket.on('timeLeft', function(time) {
   timeLeft = time.time;
-  timer.innerHTML = 'Time left: '+(Math.floor(timeLeft / 60)).toString() + ':' + (Math.floor(timeLeft % 60)).toString();
   if (timeLeft > -1) {
     timer.style.display = 'block';
   }
