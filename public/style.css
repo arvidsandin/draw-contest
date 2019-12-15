@@ -48,7 +48,6 @@ body{
 .col3 {
   grid-column-start: 3;
   grid-column-end: 3;
-  margin: 0 2%;
 }
 
 .row1 {
@@ -56,11 +55,28 @@ body{
   grid-row-end: 1;
 }
 
+#users{
+  line-height: 21px;
+  margin: 12px 0;
+}
+
+/* TODO: make canvas not move when a second player connects after time has run out */
 .pAboveCanvas{
-  display: inline-block;
+  display: inline;
+  overflow: hidden;
 }
 #wordToDraw{
+  min-height: 21px;
+  line-height: 21px;
+  float: left;
+  margin: 12px 0;
+}
+#timer{
   min-height: 16px;
+  line-height: 21px;
+  float: right;
+  margin: 12px 0;
+  /* text-align: right; */
 }
 
 

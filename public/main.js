@@ -16,13 +16,16 @@ ctx.strokeStyle = "#000";
 var isDrawing = false;
 var lastX = 0;
 var lastY = 0;
-var text = document.getElementById("input_text");
+var input = document.getElementById("input_text");
 var userlist = document.getElementById('userlist');
 var username;
 var id;
 var canDraw = false;
 var currentWord = null;
 var chat = document.getElementById('chat');
+var timer = document.getElementById('timer');
+var timeLeft = -10;
+
 // ---EVENT LISTENERs---
 //Listen to mouse events
 canvas.addEventListener('mousedown', (e) => {
@@ -35,10 +38,18 @@ canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
 
 //Send message when enter is pressed
-text.addEventListener('keydown', (e) => {
+input.addEventListener('keydown', (e) => {
   if(e.keyCode==0x0D)
   send();
 });
+
+setInterval(function(){
+  timeLeft -= 1;
+  if (timeLeft < -1) {
+    timer.style.display = 'none';
+  }
+  timer.innerHTML = 'Time left: 0'+(Math.floor(timeLeft / 60)) + ':' + (('0'+(Math.floor(timeLeft % 60))).slice(-2));
+}, 1000);
 
 // ---SOCKET LISTENERS---
 //Send initial info when connection
@@ -85,7 +96,7 @@ socket.on('message', function(message){
   textbox.scrollTop = textbox.scrollHeight;
 });
 
-//Says if a person is allowed to draw
+//If you are the drawer show brush tools and your word, otherwise hide them
 socket.on('allowedToDraw', function(allowedToDraw){
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
@@ -133,21 +144,25 @@ socket.on('changeBrush', function(brush) {
   ctx.lineWidth =  brush.size;
 });
 
+socket.on('timeLeft', function(time) {
+  timeLeft = time.time;
+  if (timeLeft > -1) {
+    timer.style.display = 'block';
+  }
+})
 // ---FUNCTIONS---
 //Send message
 function send() {
-  if (text.value != "") {
-    socket.emit('message', {text:text.value, username:username});
-    text.value = '';
+  if (input.value != "") {
+    socket.emit('message', {text:input.value, username:username});
+    input.value = '';
   }
 }
 
 function changeColor(newColor) {
-  ctx.strokeStyle =  newColor;
   socket.emit('changeBrush', {color:newColor, size:ctx.lineWidth});
 }
 function changeBrushSize(newSize) {
-  ctx.lineWidth =  newSize;
   socket.emit('changeBrush', {color:ctx.strokeStyle, size:newSize});
 }
 
