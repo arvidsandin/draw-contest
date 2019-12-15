@@ -81,7 +81,8 @@ socket.on('message', function(message){
   else {
     chat.innerHTML += message.username + ": " + message.text + "<br>";
   }
-  chat.scrollTop = chat.scrollHeight;
+  textbox = document.getElementById('textbox');
+  textbox.scrollTop = textbox.scrollHeight;
 });
 
 //Says if a person is allowed to draw

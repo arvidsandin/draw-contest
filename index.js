@@ -89,8 +89,8 @@ io.on('connection', function(socket){
       io.emit('message', {text:'Correct!', user:null});
       theDrawer = {username:username, id:id};
       socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
+      currentWord = words[Math.floor(Math.random() * words.length)];
       setTimeout(function(){
-        currentWord = words[Math.floor(Math.random() * words.length)];
         socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
         io.emit('clearCanvas');
       }, 1500);
