@@ -45,7 +45,7 @@ input.addEventListener('keydown', (e) => {
 
 setInterval(function(){
   timeLeft -= 1;
-  if (timeLeft < -2) {
+  if (timeLeft < -1) {
     timer.style.display = 'none';
   }
   timer.innerHTML = 'Time left: '+(Math.floor(timeLeft / 60)).toString() + ':' + (Math.floor(timeLeft % 60)).toString();

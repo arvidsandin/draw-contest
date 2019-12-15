@@ -63,7 +63,6 @@ body{
 /* TODO: make canvas not move when a second player connects after time has run out */
 .pAboveCanvas{
   display: inline;
-  width: 100%;
   overflow: hidden;
 }
 #wordToDraw{
