@@ -115,6 +115,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
   var clearButton = document.getElementById('button_clear');
   var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
+    input.disabled = true;
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
     chat.innerHTML += "You are drawing: " + currentWord + "<br>";
@@ -125,6 +126,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
     //Make cursor 'pointer'
   }
   else if (allowedToDraw.user.id != id){
+    input.disabled = false;
     chat.innerHTML += allowedToDraw.user.username + " is drawing<br>";
     currentWord = null;
     textPlace.textContent = " ";

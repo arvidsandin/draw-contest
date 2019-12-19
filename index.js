@@ -117,21 +117,23 @@ io.on('connection', function(socket){
   });
 
   socket.on('message', function(message){
-    text = encodeHTML(message.text);
-    socket.broadcast.emit('message', {text:text, username:encodeHTML(message.username)});
-    socket.emit('message', {text:text, username:'You'});
-    if (message.text.toLowerCase() == currentWord) {
-      io.emit('message', {text:'Correct!', user:null});
-      theDrawer = {username:username, id:id};
-      socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
-      resetBrush();
-      currentWord = words[Math.floor(Math.random() * words.length)];
-      setTimeout(function(){
-        socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
-        io.emit('clearCanvas');
-        timeLeft = 121;
-        io.emit('timeLeft', {time: timeLeft});
-      }, 1500);
+    if (id != theDrawer.id){
+      text = encodeHTML(message.text);
+      socket.broadcast.emit('message', {text:text, username:encodeHTML(message.username)});
+      socket.emit('message', {text:text, username:'You'});
+      if (message.text.toLowerCase() == currentWord) {
+        io.emit('message', {text:'Correct!', user:null});
+        theDrawer = {username:username, id:id};
+        socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
+        resetBrush();
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        setTimeout(function(){
+          socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
+          io.emit('clearCanvas');
+          timeLeft = 121;
+          io.emit('timeLeft', {time: timeLeft});
+        }, 1500);
+      }
     }
   });
 
