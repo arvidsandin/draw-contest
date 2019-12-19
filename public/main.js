@@ -37,6 +37,18 @@ canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
 
+canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    var offset = canvas.getBoundingClientRect();
+    lastX = make_relative(e.touches[0].clientX-offset.left);
+    lastY = make_relative(e.touches[0].clientY-offset.top);
+    draw(e);
+  });
+canvas.addEventListener('touchmove', draw);
+canvas.addEventListener('touchend', () => isDrawing = false);
+canvas.addEventListener('touchcancel', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
+
 //Send message when enter is pressed
 input.addEventListener('keydown', (e) => {
   if(e.keyCode==0x0D)
@@ -181,8 +193,15 @@ function draw(e) {
     //listen for mouse move event
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
-    var newX = make_relative(e.offsetX);
-    var newY = make_relative(e.offsetY);
+    if(e.touches!=undefined){
+      var offset = canvas.getBoundingClientRect();
+      newX = make_relative(e.touches[0].clientX-offset.left);
+      newY = make_relative(e.touches[0].clientY-offset.top);
+    }
+    else {
+      var newX = make_relative(e.offsetX);
+      var newY = make_relative(e.offsetY);
+    }
     ctx.lineTo(newX, newY);
     socket.emit('stroke', {lastX:lastX, lastY:lastY, e:{offsetX:newX, offsetY:newY}});
     ctx.stroke();

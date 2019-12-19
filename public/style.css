@@ -152,6 +152,7 @@ body{
   border: 1px solid #000;
   background: #FFFFFF;
   max-height: calc(100% - 46px);
+  touch-action: none;
   touch-action: pinch-zoom;
 }
 /* TODO: make button as wide as canvas on wide displays */
