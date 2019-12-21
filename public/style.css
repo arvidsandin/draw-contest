@@ -60,7 +60,6 @@ body{
   margin: 12px 0;
 }
 
-/* TODO: make canvas not move when a second player connects after time has run out */
 .pAboveCanvas{
   display: inline;
   overflow: hidden;
@@ -94,13 +93,14 @@ body{
 
 .brush_modifyer{
   padding: 4%;
-  margin: 5px 0 0 1px;
+  margin: 4px 2px 0 2px;
   border: 2px solid #000000;
   border-radius: 20%;
   height: 0;
   width:0;
   position: relative;
   background: #E8F4F8;
+  float:left;
 }
 #\#000000, #px10{
   border: 2px solid #FFFFFF;

@@ -24,7 +24,6 @@ setInterval(function(){
     io.emit('message', {
       text: 'Time ran out! Randomizing new drawer...', username:null
     });
-    resetBrush();
     var theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)]
     while (theDrawer == theNewDrawer) {
       theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
@@ -33,6 +32,7 @@ setInterval(function(){
     io.emit('allowedToDraw', {
       bool:false, word:null, user:theDrawer
     });
+    resetBrush();
     currentWord = words[Math.floor(Math.random() * words.length)];
     setTimeout(function(){
       io.to(theDrawer.id).emit('allowedToDraw', {
@@ -103,19 +103,22 @@ io.on('connection', function(socket){
         usersOnline:usersOnline, user:username
       });
       if (id == theDrawer.id){
-        resetBrush();
         history = [];
+        resetBrush();
         // If there are people left, randomize a new drawer
         if (usersOnline.length > 0){
           theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
           socket.broadcast.emit('allowedToDraw', {
             bool:false, word:null, user:theDrawer
           });
+          resetBrush();
           currentWord = words[Math.floor(Math.random() * words.length)];
           io.to(theDrawer.id).emit('allowedToDraw', {
             bool:true, word:currentWord, user:theDrawer
           });
-          io.emit('clearCanvas');
+          io.emit('clearCanvas
+          timeLeft = 61;
+          io.emit('timeLeft', {time: timeLeft});
         }
       }
     }
@@ -130,10 +133,10 @@ io.on('connection', function(socket){
         io.emit('message', {text:'Correct!', user:null});
         theDrawer = {username:username, id:id};
         socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
-        resetBrush();
         currentWord = words[Math.floor(Math.random() * words.length)];
         setTimeout(function(){
           socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
+          resetBrush();
           io.emit('clearCanvas');
           history = [];
           timeLeft = 61;

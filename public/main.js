@@ -57,10 +57,12 @@ input.addEventListener('keydown', (e) => {
 
 setInterval(function(){
   timeLeft -= 1;
-  if (timeLeft < -1) {
-    timer.style.display = 'none';
+  if (timeLeft < -0) {
+    timer.innerHTML = '&nbsp';
   }
-  timer.innerHTML = 'Time left: 0'+(Math.floor(timeLeft / 60)) + ':' + (('0'+(Math.floor(timeLeft % 60))).slice(-2));
+  else {
+    timer.innerHTML = 'Time left: 0'+(Math.floor(timeLeft / 60)) + ':' + (('0'+(Math.floor(timeLeft % 60))).slice(-2));
+  }
 }, 1000);
 
 // ---SOCKET LISTENERS---
