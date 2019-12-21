@@ -116,7 +116,7 @@ io.on('connection', function(socket){
           io.to(theDrawer.id).emit('allowedToDraw', {
             bool:true, word:currentWord, user:theDrawer
           });
-          io.emit('clearCanvas
+          io.emit('clearCanvas');
           timeLeft = 61;
           io.emit('timeLeft', {time: timeLeft});
         }
