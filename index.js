@@ -104,6 +104,7 @@ io.on('connection', function(socket){
       });
       if (id == theDrawer.id){
         resetBrush();
+        history = [];
         // If there are people left, randomize a new drawer
         if (usersOnline.length > 0){
           theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
@@ -115,7 +116,6 @@ io.on('connection', function(socket){
             bool:true, word:currentWord, user:theDrawer
           });
           io.emit('clearCanvas');
-          history = [];
         }
       }
     }

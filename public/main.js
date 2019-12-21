@@ -170,6 +170,12 @@ socket.on('clearCanvas', function(clear){
 });
 
 socket.on('changeBrush', function(brush) {
+  modifyers = document.getElementsByClassName('brush_modifyer');
+  for (var i = 0; i < modifyers.length; i++) {
+    modifyers[i].style.border = '2px solid #000';
+  }
+  document.getElementById(brush.color).style.border = '2px solid #FFF';
+  document.getElementById('px' + brush.size.toString()).style.border = '2px solid #FFF';
   ctx.strokeStyle =  brush.color;
   ctx.lineWidth =  brush.size;
 });
@@ -193,7 +199,7 @@ function changeColor(newColor) {
   socket.emit('changeBrush', {color:newColor, size:ctx.lineWidth});
 }
 function changeBrushSize(newSize) {
-  socket.emit('changeBrush', {color:ctx.strokeStyle, size:newSize});
+  socket.emit('changeBrush', {color:ctx.strokeStyle.toUpperCase(), size:newSize});
 }
 
 function clearCanvas() {

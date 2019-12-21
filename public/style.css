@@ -102,9 +102,13 @@ body{
   position: relative;
   background: #E8F4F8;
 }
+#\#000000, #px10{
+  border: 2px solid #FFFFFF;
+}
 .brush_modifyer:hover{
   cursor: pointer;
-  border: 2px solid #FFFFFF;
+  /* !important is so that javascript wont override hover rule first time a button is clicked */
+  border: 2px solid #FFFFFF !important;
 }
 
 .dot{
