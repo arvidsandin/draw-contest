@@ -72,6 +72,23 @@ socket.on('init', function(conf){
     userlist.innerHTML += (conf.usersOnline[i].username + '<br>');
   }
   userlist.innerHTML += (username + '<br>');
+  console.log(conf.history);
+  for (var i = 0; i < conf.history.length; i++){
+    event = conf.history[i]
+    // if (event.lastX != undefined){
+      ctx.beginPath();
+      ctx.moveTo(event.lastX, event.lastY);
+      ctx.lineTo(event.offsetX, event.offsetY);
+      ctx.stroke();
+    // }
+    // else{
+      ctx.strokeStyle =  event.color;
+      ctx.lineWidth =  event.size;
+    // }
+  }
+
+
+
   ctx.lineWidth = conf.brushSize;
   ctx.strokeStyle = conf.brushColor;
   socket.emit('connectInfo', {username:username, id:socket.id});
@@ -143,9 +160,9 @@ socket.on('allowedToDraw', function(allowedToDraw){
 socket.on('stroke', function(stroke){
   ctx.beginPath();
   ctx.moveTo(stroke.lastX, stroke.lastY);
-  ctx.lineTo(stroke.e.offsetX, stroke.e.offsetY);
+  ctx.lineTo(stroke.offsetX, stroke.offsetY);
   ctx.stroke();
-  [lastX, lastY] = [stroke.e.offsetX, stroke.e.offsetY];
+  [lastX, lastY] = [stroke.offsetX, stroke.offsetY];
 });
 
 //Clear canvas after correct guess
@@ -205,7 +222,7 @@ function draw(e) {
       var newY = make_relative(e.offsetY);
     }
     ctx.lineTo(newX, newY);
-    socket.emit('stroke', {lastX:lastX, lastY:lastY, e:{offsetX:newX, offsetY:newY}});
+    socket.emit('stroke', {lastX:lastX, lastY:lastY, offsetX:newX, offsetY:newY});
     ctx.stroke();
     [lastX, lastY] = [newX, newY];
   }
