@@ -72,7 +72,6 @@ socket.on('init', function(conf){
     userlist.innerHTML += (conf.usersOnline[i].username + '<br>');
   }
   userlist.innerHTML += (username + '<br>');
-  console.log(conf.history);
   for (var i = 0; i < conf.history.length; i++){
     event = conf.history[i]
     // if (event.lastX != undefined){
