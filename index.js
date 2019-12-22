@@ -6,7 +6,7 @@ var words = require('./words.json');
 var currentWord = "";
 var usersOnline=[];
 var theDrawer = {username:null, id:null};
-var brushColor = "#000";
+var brushColor = "#000000";
 var brushSize = 10;
 var timeLeft = 61;
 var history = [];
@@ -54,7 +54,8 @@ io.on('connection', function(socket){
   var username;
   var id;
   var userInfo;
-  socket.emit('init', {usersOnline:usersOnline, brushSize:brushSize, brushColor:brushColor, history: history});
+  socket.emit('init', {brushSize:brushSize, brushColor:brushColor, history: history});
+  socket.emit('scoreBoard', usersOnline);
   socket.emit('timeLeft', {time:timeLeft});
   socket.on('connectInfo', function(info){
     username = info.username;
@@ -62,9 +63,12 @@ io.on('connection', function(socket){
     userInfo = {
       username:username,
       htmlusername:encodeHTML(username),
-      id:id
+      id:id,
+      drawerPoints:0,
+      guesserPoints:0
     };
     socket.broadcast.emit('newUser', userInfo);
+    io.emit('scoreBoard', usersOnline);
     console.log(info.username + ' connected');
     socket.broadcast.emit('message', {
       text: info.username + ' has connected', username:null
@@ -99,8 +103,9 @@ io.on('connection', function(socket){
     else {
       console.log(username + " disconnected");
       usersOnline = usersOnline.filter(e => e.id != id);
-      socket.broadcast.emit('someoneDisconnected', {
-        usersOnline:usersOnline, user:username
+      io.emit('scoreBoard', usersOnline);
+      socket.broadcast.emit('message', {
+        text: username + ' has disconnected', username:null
       });
       if (id == theDrawer.id){
         history = [];
@@ -131,7 +136,12 @@ io.on('connection', function(socket){
       socket.emit('message', {text:text, username:'You'});
       if (message.text.toLowerCase() == currentWord) {
         io.emit('message', {text:'Correct!', user:null});
+        // Give points
+        usersOnline.find(user => user.id == theDrawer.id).drawerPoints += 1;
+        usersOnline.find(user => user.id == id).guesserPoints += 1;
+        // change drawer
         theDrawer = {username:username, id:id};
+        io.emit('scoreBoard', usersOnline);
         socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
         currentWord = words[Math.floor(Math.random() * words.length)];
         setTimeout(function(){
@@ -177,7 +187,7 @@ function encodeHTML(s) {
 }
 
 function resetBrush(){
-  brushColor = '#000';
+  brushColor = '#000000';
   brushSize = 10;
   io.emit('changeBrush', {color:brushColor, size:brushSize});
 }

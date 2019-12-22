@@ -70,22 +70,18 @@ setInterval(function(){
 socket.on('init', function(conf){
   username = socket.id.substring(0, 5);
   id = socket.id;
-  for (var i = 0; i < conf.usersOnline.length; i++) {
-    userlist.innerHTML += (conf.usersOnline[i].username + '<br>');
-  }
-  userlist.innerHTML += (username + '<br>');
   for (var i = 0; i < conf.history.length; i++){
     event = conf.history[i]
-    // if (event.lastX != undefined){
+    if (event.lastX != undefined){
       ctx.beginPath();
       ctx.moveTo(event.lastX, event.lastY);
       ctx.lineTo(event.offsetX, event.offsetY);
       ctx.stroke();
-    // }
-    // else{
+    }
+    else{
       ctx.strokeStyle =  event.color;
       ctx.lineWidth =  event.size;
-    // }
+    }
   }
 
 
@@ -95,19 +91,7 @@ socket.on('init', function(conf){
   socket.emit('connectInfo', {username:username, id:socket.id});
 });
 
-//Add user to list when someone has connected
-socket.on('newUser', function(newUser){
-  userlist.innerHTML += (newUser.htmlusername + '<br>');
-});
 
-//Update userlist when someone has disconnected
-socket.on('someoneDisconnected', function(info){
-  chat.innerHTML += (info.user) + " has disconnected<br>";
-  userlist.innerHTML = "";
-  for (var user in info.usersOnline) {
-      userlist.innerHTML += (info.usersOnline[user].htmlusername + '<br>');
-  };
-});
 
 socket.on('disconnect', (reason) => {
     chat.innerHTML += "You have disconnected<br>";
@@ -152,7 +136,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
     for (i = 0; i < modifyers.length; i++) {
       modifyers[i].style.display = "none";
     };
-    //Make cursor 'not-allowed'
+    //TODO: Make cursor 'not-allowed'
   }
   chat.scrollTop = chat.scrollHeight;
 });
@@ -172,20 +156,27 @@ socket.on('clearCanvas', function(clear){
 });
 
 socket.on('changeBrush', function(brush) {
+  ctx.strokeStyle =  brush.color;
+  ctx.lineWidth =  brush.size;
   modifyers = document.getElementsByClassName('brush_modifyer');
   for (var i = 0; i < modifyers.length; i++) {
     modifyers[i].style.border = '2px solid #000';
   }
   document.getElementById(brush.color).style.border = '2px solid #FFF';
   document.getElementById('px' + brush.size.toString()).style.border = '2px solid #FFF';
-  ctx.strokeStyle =  brush.color;
-  ctx.lineWidth =  brush.size;
 });
 
 socket.on('timeLeft', function(time) {
   timeLeft = time.time;
   if (timeLeft > -1) {
     timer.style.display = 'block';
+  }
+});
+
+socket.on('scoreBoard', function(scoreBoard) {
+  userlist.innerHTML = '';
+  for (var i = 0; i < scoreBoard.length; i++) {
+    userlist.innerHTML += (scoreBoard[i].username + ':<nbsp>' + (scoreBoard[i].drawerPoints + scoreBoard[i].guesserPoints) + '<br>');
   }
 })
 // ---FUNCTIONS---
