@@ -67,8 +67,6 @@ io.on('connection', function(socket){
       drawerPoints:0,
       guesserPoints:0
     };
-    socket.broadcast.emit('newUser', userInfo);
-    io.emit('scoreBoard', usersOnline);
     console.log(info.username + ' connected');
     socket.broadcast.emit('message', {
       text: info.username + ' has connected', username:null
@@ -86,6 +84,7 @@ io.on('connection', function(socket){
       });
     }
     usersOnline.push(userInfo);
+    io.emit('scoreBoard', usersOnline);
   });
 
   socket.on('clearCanvas', (x) => {
