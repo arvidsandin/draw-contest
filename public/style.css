@@ -6,7 +6,7 @@
 h1{
   text-align: center;
   margin: 0;
-  padding: 25px 0 10px 0;
+  padding: 0;
   font-size: 2em ;
   font-weight: bold;
   /* font-family: '' */
@@ -18,41 +18,18 @@ body{
   font-size: 16;
   line-height: 1.3;
 }
-.grid-container{
-  display: grid;
-  grid-template-columns: 25% 43% 32%;
-  /* grid-template-rows: 70vh; */
-  justify-content: space-evenly;
+.wrapper{
+  display: flex;
+  flex-flow: wrap;
 }
 
-.grid-item {
-  padding: 7px 5px;
+.wrapper > * {
+  flex: 1 100%;
+}
+
+.wrapper-item {
+  padding: 0;
   cursor:default;
-}
-
-.col1 {
-  grid-column-start: 1;
-  grid-column-end: 1;
-}
-
-.col2 {
-  grid-column-start: 2;
-  grid-column-end: 2;
-}
-
-.row1_2{
-  grid-row-start: 1;
-  grid-row-end: 2;
-}
-
-.col3 {
-  grid-column-start: 3;
-  grid-column-end: 3;
-}
-
-.row1 {
-  grid-row-start: 1;
-  grid-row-end: 1;
 }
 
 #users{
@@ -83,6 +60,7 @@ body{
   overflow: auto;
   background-color: #E8F4F8;
   border: 1px solid black;
+  margin-bottom: 8px;
 }
 #userlist{
   margin: 3px 3px;
@@ -176,7 +154,7 @@ body{
 #chat{
   margin: 3px 3px;
   width: 95%;
-  height: 70vh;
+  height: 200px;
   resize: none;
 }
 
@@ -196,12 +174,37 @@ input{
 }
 
 footer{
-  position: fixed;
-  bottom: 0;
-  left:0;
+  /* position: fixed; */
+  /* bottom: 0; */
+  /* left:0; */
+  margin: 0;
   width: 100%;
   background: #9DC8D6;
 }
 #bottom_row{
   margin: 3px 15px;
+}
+
+@media all and (max-width: 600px) {
+  /* We tell both sidebars to share a row */
+  * { margin: ;}
+}
+
+@media all and (min-width: 600px) {
+  /* We tell both sidebars to share a row */
+  .side { flex: 1 auto; }
+}
+
+@media all and (min-width: 800px) {
+  /* We invert order of first sidebar and main
+   * And tell the main element to take twice as much width as the other two sidebars
+   */
+   .wrapper-item { padding: 7px 5px; cursor:default; }
+   .h1 { padding: 25px 0 10px 0; }
+   .drawingarea { flex: 2 0px; }
+   .scoreboard_and_modifyers { order: 1; }
+   .drawingarea { order: 2; }
+   .chat { order: 3; }
+   #chat { height: 500px;}
+   .footer  { order: 4; }
 }
