@@ -70,6 +70,7 @@ setInterval(function(){
 socket.on('init', function(conf){
   username = socket.id.substring(0, 5);
   id = socket.id;
+  ctx.clearRect(0, 0, (canvas.width), (canvas.height))
   for (var i = 0; i < conf.history.length; i++){
     event = conf.history[i]
     if (event.lastX != undefined){

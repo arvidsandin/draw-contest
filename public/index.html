@@ -29,22 +29,27 @@
         <br>
         <canvas id="canvas"></canvas>
         <br>
-        <button id="button_clear" type:"button" onclick="clearCanvas()">Clear</button>
+        <div class="belowCanvas">
+          <button id="button_colors" type:"button" onclick="">Colors</button><button id="button_sizes" type:"button" onclick="">Sizes</button><button id="button_clear" type:"button" onclick="clearCanvas()">Clear</button>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br>
       </div>
 
-      <div class="wrapper-item side chat" id="chatarea">
-        <div class="textbox" id="textbox">
-          <p id="chat"></p>
-        </div>
+      <div class="wrapper_item chat_input">
         <input type="text" id="input_text">
         <button id="send" type="button" onclick="send()">Send</button>
       </div>
+      <div class="wrapper_item textbox" id="textbox">
+        <p id="chat"></p>
+      </div>
 
-      <div class="wrapper-item side scoreboard_and_modifyers">
+      <div class="scoreboard" id="scoreboard">
         <p id="users">Users</p>
         <div class="textbox">
           <p id="userlist"></p>
         </div>
+      </div>
+      <div class="modifyers">
         <button class="brush_modifyer" onclick="changeColor('#000000')" style="background: #000000" id="#000000"></button>
         <button class="brush_modifyer" onclick="changeColor('#808080')" style="background: #808080" id="#808080"></button>
         <button class="brush_modifyer" onclick="changeColor('#6C3C0C')" style="background: #6C3C0C" id="#6C3C0C"></button>
