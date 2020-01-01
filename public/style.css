@@ -24,26 +24,25 @@ button {
     /* padding: 1rem 2rem; */
     margin: 0;
     text-decoration: none;
-    background: #0069ed;
+    background: #30839f;
     color: #ffffff;
     font-family: sans-serif;
     font-size: 1rem;
     cursor: pointer;
     text-align: center;
-      transition: background 250ms ease-in-out,
+      transition: background 150ms ease-in-out,
                   transform 150ms ease;
     -webkit-appearance: none;
     -moz-appearance: none;
     border-radius: 7px;
 }
-button:hover,
-button:focus {
-    background: #0053ba;
-}
-button:active {
+button:focus { outline: 0; }
+button::-moz-focus-inner { border: 0; }
+button:active{
     transform: scale(0.98);
 }
 button:hover{
+  background: #276b80;
   cursor: pointer;
 }
 .wrapper{
@@ -86,7 +85,7 @@ button:hover{
   overflow: auto;
   background-color: #E8F4F8;
   border: 1px solid black;
-  margin-bottom: 8px;
+  margin: 8px 0;
 }
 #userlist{
   margin: 3px 3px;
@@ -171,6 +170,7 @@ button:hover{
 .belowCanvas{
   height: 30px;
   display: flex;
+  display: none ;
   justify-content: space-between;
 }
 
@@ -178,10 +178,10 @@ button:hover{
   width: 32%;
   height: 100%;
 }
-
-#chatarea{
-  height: 100%;
+#chat_input{
+  display: none;
 }
+
 #chat{
   margin: 3px 3px;
   width: 95%;

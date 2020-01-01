@@ -95,34 +95,36 @@ socket.on('init', function(conf){
 
 
 socket.on('disconnect', (reason) => {
-    chat.innerHTML += "You have disconnected<br>";
+    chat.innerHTML = "You have disconnected<br>" + chat.innerHTML;
     userlist.innerHTML = "";
 });
 
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
-    chat.innerHTML += (message.text + "<br>");
+    chat.innerHTML = (message.text + "<br>" + chat.innerHTML);
   }
   else {
-    chat.innerHTML += message.username + ": " + message.text + "<br>";
+    chat.innerHTML = message.username + ": " + message.text + "<br>" + chat.innerHTML;
   }
   textbox = document.getElementById('textbox');
-  textbox.scrollTop = textbox.scrollHeight;
+  // textbox.scrollTop = textbox.scrollHeight;
 });
 
 //If you are the drawer show brush tools and your word, otherwise hide them
 socket.on('allowedToDraw', function(allowedToDraw){
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
-  var clearButton = document.getElementById('button_clear');
+  var belowCanvas = document.getElementById('belowCanvas');
+  var chat_input = document.getElementById('chat_input');
   var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
     input.disabled = true;
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
-    chat.innerHTML += "You are drawing: " + currentWord + "<br>";
-    clearButton.style.display = "inline";
+    chat.innerHTML = "You are drawing: " + currentWord + "<br>" + chat.innerHTML;
+    belowCanvas.style.display = "flex";
+    chat_input.style.display = "none";
     for (i = 0; i < modifyers.length; i++) {
       modifyers[i].style.display = "inline";
     };
@@ -130,16 +132,17 @@ socket.on('allowedToDraw', function(allowedToDraw){
   }
   else if (allowedToDraw.user.id != id){
     input.disabled = false;
-    chat.innerHTML += allowedToDraw.user.username + " is drawing<br>";
+    chat.innerHTML = allowedToDraw.user.username + " is drawing<br>" + chat.innerHTML;
     currentWord = null;
     textPlace.textContent = " ";
-    clearButton.style.display = "none";
+    belowCanvas.style.display = "none";
+    chat_input.style.display = "inline-block";
     for (i = 0; i < modifyers.length; i++) {
       modifyers[i].style.display = "none";
     };
     //TODO: Make cursor 'not-allowed'
   }
-  chat.scrollTop = chat.scrollHeight;
+  // chat.scrollTop = chat.scrollHeight;
 });
 
 //Display new strokes when someone else draws
