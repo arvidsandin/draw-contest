@@ -22,7 +22,7 @@ var username;
 var id;
 var canDraw = false;
 var currentWord = null;
-var chat = document.getElementById('chat');
+var chat = document.getElementById('chat_text');
 var timer = document.getElementById('timer');
 var timeLeft = -10;
 
@@ -68,8 +68,16 @@ setInterval(function(){
 // ---SOCKET LISTENERS---
 //Send initial info when connection
 socket.on('init', function(conf){
-  username = socket.id.substring(0, 5);
+  username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+  if (username == undefined || username == ""){
+    username = window.prompt("What is your username?",username);
+    if (username == undefined || username == ""){
+      username = socket.id.substring(0, 5);
+    }
+    document.cookie = "username=" + username;
+  }
   id = socket.id;
+  ctx.clearRect(0, 0, (canvas.width), (canvas.height))
   for (var i = 0; i < conf.history.length; i++){
     event = conf.history[i]
     if (event.lastX != undefined){
@@ -94,34 +102,37 @@ socket.on('init', function(conf){
 
 
 socket.on('disconnect', (reason) => {
-    chat.innerHTML += "You have disconnected<br>";
+    chat.innerHTML = "You have disconnected<br>" + chat.innerHTML;
     userlist.innerHTML = "";
 });
 
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
-    chat.innerHTML += (message.text + "<br>");
+    chat.innerHTML = (message.text + "<br>" + chat.innerHTML);
   }
   else {
-    chat.innerHTML += message.username + ": " + message.text + "<br>";
+    chat.innerHTML = message.username + ": " + message.text + "<br>" + chat.innerHTML;
   }
   textbox = document.getElementById('textbox');
-  textbox.scrollTop = textbox.scrollHeight;
+  // textbox.scrollTop = textbox.scrollHeight;
 });
 
 //If you are the drawer show brush tools and your word, otherwise hide them
 socket.on('allowedToDraw', function(allowedToDraw){
   canDraw = allowedToDraw.bool;
   textPlace = document.getElementById('wordToDraw');
-  var clearButton = document.getElementById('button_clear');
+  var belowCanvas = document.getElementById('belowCanvas');
+  var chat_input = document.getElementById('chat_input');
+  document.getElementById('input_text').value = "";
   var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
     input.disabled = true;
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
-    chat.innerHTML += "You are drawing: " + currentWord + "<br>";
-    clearButton.style.display = "inline";
+    chat.innerHTML = "You are drawing: " + currentWord + "<br>" + chat.innerHTML;
+    belowCanvas.style.display = "flex";
+    chat_input.style.display = "none";
     for (i = 0; i < modifyers.length; i++) {
       modifyers[i].style.display = "inline";
     };
@@ -129,16 +140,17 @@ socket.on('allowedToDraw', function(allowedToDraw){
   }
   else if (allowedToDraw.user.id != id){
     input.disabled = false;
-    chat.innerHTML += allowedToDraw.user.username + " is drawing<br>";
+    chat.innerHTML = allowedToDraw.user.username + " is drawing<br>" + chat.innerHTML;
     currentWord = null;
     textPlace.textContent = " ";
-    clearButton.style.display = "none";
+    belowCanvas.style.display = "none";
+    chat_input.style.display = "inline-block";
     for (i = 0; i < modifyers.length; i++) {
       modifyers[i].style.display = "none";
     };
     //TODO: Make cursor 'not-allowed'
   }
-  chat.scrollTop = chat.scrollHeight;
+  // chat.scrollTop = chat.scrollHeight;
 });
 
 //Display new strokes when someone else draws
@@ -199,11 +211,6 @@ function clearCanvas() {
   socket.emit('clearCanvas', {});
 }
 
-function clearChatAndCanvas() {
-  document.getElementById('chat').value = "";
-  ctx.clearRect(0, 0, (canvas.width), (canvas.height))
-}
-
 function draw(e) {
     // stop the function if they are not mouse down or if not allowed to draw
     if(!isDrawing || !canDraw) return;
@@ -228,4 +235,34 @@ function draw(e) {
 //adapt strokes for current canvas size
 function make_relative(a){
   return(a*canvasResolution/canvas.clientHeight)
+}
+
+// TODO: make popup with modifyers
+function show_colors(){
+  window.scrollBy({
+    top: document.body.scrollHeight,
+    behavior: 'smooth'
+  });
+  setTimeout(function () {
+    window.scrollTo(0,document.body.scrollHeight);
+  }, 500);
+  // color_modifyers = document.getElementById('colors').style;
+  // color_modifyers.display = 'inline-block';
+  // color_modifyers.position = 'fixed';
+  // color_modifyers.left = '50%';
+  // color_modifyers.top = '50%';
+  // color_modifyers.transform = 'translate(-50%, -50%)';
+}
+function hide_colors(){
+}
+function show_sizes(){
+  window.scrollBy({
+    top: document.body.scrollHeight,
+    behavior: 'smooth'
+  });
+  setTimeout(function () {
+    window.scrollTo(0,document.body.scrollHeight);
+  }, 500);
+}
+function hide_sizes(){
 }
