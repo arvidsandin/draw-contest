@@ -22,7 +22,7 @@ var username;
 var id;
 var canDraw = false;
 var currentWord = null;
-var chat = document.getElementById('chat');
+var chat = document.getElementById('chat_text');
 var timer = document.getElementById('timer');
 var timeLeft = -10;
 
@@ -68,7 +68,14 @@ setInterval(function(){
 // ---SOCKET LISTENERS---
 //Send initial info when connection
 socket.on('init', function(conf){
-  username = socket.id.substring(0, 5);
+  username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+  if (username == undefined || username == ""){
+    username = window.prompt("What is your username?",username);
+    if (username == undefined || username == ""){
+      username = socket.id.substring(0, 5);
+    }
+    document.cookie = "username=" + username;
+  }
   id = socket.id;
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
   for (var i = 0; i < conf.history.length; i++){
@@ -117,6 +124,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
   textPlace = document.getElementById('wordToDraw');
   var belowCanvas = document.getElementById('belowCanvas');
   var chat_input = document.getElementById('chat_input');
+  document.getElementById('input_text').value = "";
   var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
     input.disabled = true;
@@ -203,11 +211,6 @@ function clearCanvas() {
   socket.emit('clearCanvas', {});
 }
 
-function clearChatAndCanvas() {
-  document.getElementById('chat').value = "";
-  ctx.clearRect(0, 0, (canvas.width), (canvas.height))
-}
-
 function draw(e) {
     // stop the function if they are not mouse down or if not allowed to draw
     if(!isDrawing || !canDraw) return;
@@ -232,4 +235,34 @@ function draw(e) {
 //adapt strokes for current canvas size
 function make_relative(a){
   return(a*canvasResolution/canvas.clientHeight)
+}
+
+// TODO: make popup with modifyers
+function show_colors(){
+  window.scrollBy({
+    top: document.body.scrollHeight,
+    behavior: 'smooth'
+  });
+  setTimeout(function () {
+    window.scrollTo(0,document.body.scrollHeight);
+  }, 500);
+  // color_modifyers = document.getElementById('colors').style;
+  // color_modifyers.display = 'inline-block';
+  // color_modifyers.position = 'fixed';
+  // color_modifyers.left = '50%';
+  // color_modifyers.top = '50%';
+  // color_modifyers.transform = 'translate(-50%, -50%)';
+}
+function hide_colors(){
+}
+function show_sizes(){
+  window.scrollBy({
+    top: document.body.scrollHeight,
+    behavior: 'smooth'
+  });
+  setTimeout(function () {
+    window.scrollTo(0,document.body.scrollHeight);
+  }, 500);
+}
+function hide_sizes(){
 }

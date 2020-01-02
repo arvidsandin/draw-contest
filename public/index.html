@@ -30,46 +30,50 @@
         <canvas id="canvas"></canvas>
         <br>
         <div class="belowCanvas" id="belowCanvas">
-          <button id="button_colors" type:"button" onclick="">Colors</button><button id="button_sizes" type:"button" onclick="">Sizes</button><button id="button_clear" type:"button" onclick="clearCanvas()">Clear</button>
+          <button class="generic_button" id="button_colors" type:"button" onclick="show_colors()">Colors</button><button class="generic_button" id="button_sizes" type:"button" onclick="show_sizes()">Sizes</button><button class="generic_button" id="button_clear" type:"button" onclick="clearCanvas()">Clear</button>
         </div>
       </div>
 
       <div class="wrapper_item chat_input" id="chat_input">
         <input type="text" id="input_text">
-        <button id="send" type="button" onclick="send()">Send</button>
+        <button class="generic_button" id="send" type="button" onclick="send()">Send</button>
       </div>
-      <div class="wrapper_item textbox">
-        <p id="chat"></p>
+      <div class="wrapper_item textbox chat">
+        <p id="chat_text"></p>
       </div>
 
-      <div class="scoreboard" id="scoreboard">
+      <div class="wrapper_item scoreboard" id="scoreboard">
         <p id="users">Users</p>
         <div class="textbox">
           <p id="userlist"></p>
         </div>
-      </div>
       <div class="modifyers">
-        <button class="brush_modifyer" onclick="changeColor('#000000')" style="background: #000000" id="#000000"></button>
-        <button class="brush_modifyer" onclick="changeColor('#808080')" style="background: #808080" id="#808080"></button>
-        <button class="brush_modifyer" onclick="changeColor('#6C3C0C')" style="background: #6C3C0C" id="#6C3C0C"></button>
-        <button class="brush_modifyer" onclick="changeColor('#DCD3AE')" style="background: #DCD3AE" id="#DCD3AE"></button>
-        <button class="brush_modifyer" onclick="changeColor('#FF0000')" style="background: #FF0000" id="#FF0000"></button>
-        <button class="brush_modifyer" onclick="changeColor('#FFA500')" style="background: #FFA500 "id="#FFA500"></button>
-        <button class="brush_modifyer" onclick="changeColor('#FFFF00')" style="background: #FFFF00" id="#FFFF00"></button>
-        <br style="clear:both">
-        <button class="brush_modifyer" onclick="changeColor('#7CFC00')" style="background: #7CFC00" id="#7CFC00"></button>
-        <button class="brush_modifyer" onclick="changeColor('#228B22')" style="background: #228B22" id="#228B22"></button>
-        <button class="brush_modifyer" onclick="changeColor('#87CEEB')" style="background: #87CEEB" id="#87CEEB"></button>
-        <button class="brush_modifyer" onclick="changeColor('#00008B')" style="background: #00008B" id="#00008B"></button>
-        <button class="brush_modifyer" onclick="changeColor('#800080')" style="background: #800080" id="#800080"></button>
-        <button class="brush_modifyer" onclick="changeColor('#FF69B4')" style="background: #FF69B4" id="#FF69B4"></button>
-        <button class="brush_modifyer" onclick="changeColor('#FFFFFF')" style="background: #FFFFFF" id="#FFFFFF"></button>
-        <br style="clear:both">
-        <button class="brush_modifyer" onclick="changeBrushSize(05)" id="px5"><span class="dot dot_small"></span></button>
-        <button class="brush_modifyer" onclick="changeBrushSize(10)" id="px10"><span class="dot dot_medium"></span></button>
-        <button class="brush_modifyer" onclick="changeBrushSize(20)" id="px20"><span class="dot dot_large"></span></button>
-        <button class="brush_modifyer" onclick="changeBrushSize(50)" id="px50"><span class="dot dot_huge"></span></button>
+        <div id="colors">
+          <button class="brush_modifyer" onclick="changeColor('#000000')" style="background: #000000" id="#000000"></button>
+          <button class="brush_modifyer" onclick="changeColor('#808080')" style="background: #808080" id="#808080"></button>
+          <button class="brush_modifyer" onclick="changeColor('#6C3C0C')" style="background: #6C3C0C" id="#6C3C0C"></button>
+          <button class="brush_modifyer" onclick="changeColor('#DCD3AE')" style="background: #DCD3AE" id="#DCD3AE"></button>
+          <button class="brush_modifyer" onclick="changeColor('#FF0000')" style="background: #FF0000" id="#FF0000"></button>
+          <button class="brush_modifyer" onclick="changeColor('#FFA500')" style="background: #FFA500 "id="#FFA500"></button>
+          <button class="brush_modifyer" onclick="changeColor('#FFFF00')" style="background: #FFFF00" id="#FFFF00"></button>
+          <br style="clear:both">
+          <button class="brush_modifyer" onclick="changeColor('#7CFC00')" style="background: #7CFC00" id="#7CFC00"></button>
+          <button class="brush_modifyer" onclick="changeColor('#228B22')" style="background: #228B22" id="#228B22"></button>
+          <button class="brush_modifyer" onclick="changeColor('#87CEEB')" style="background: #87CEEB" id="#87CEEB"></button>
+          <button class="brush_modifyer" onclick="changeColor('#00008B')" style="background: #00008B" id="#00008B"></button>
+          <button class="brush_modifyer" onclick="changeColor('#800080')" style="background: #800080" id="#800080"></button>
+          <button class="brush_modifyer" onclick="changeColor('#FF69B4')" style="background: #FF69B4" id="#FF69B4"></button>
+          <button class="brush_modifyer" onclick="changeColor('#FFFFFF')" style="background: #FFFFFF" id="#FFFFFF"></button>
+          <br style="clear:both">
+        </div>
+        <div id="sizes">
+          <button class="brush_modifyer" onclick="changeBrushSize(05)" id="px5"><span class="dot dot_small"></span></button>
+          <button class="brush_modifyer" onclick="changeBrushSize(10)" id="px10"><span class="dot dot_medium"></span></button>
+          <button class="brush_modifyer" onclick="changeBrushSize(20)" id="px20"><span class="dot dot_large"></span></button>
+          <button class="brush_modifyer" onclick="changeBrushSize(50)" id="px50"><span class="dot dot_huge"></span></button>
+        </div>
       </div>
+    </div>
     </div>
     <script src="main.js">
     </script>
