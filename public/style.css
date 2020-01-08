@@ -41,7 +41,6 @@ body{
     transform: scale(0.98);
 }
 .generic_button:hover{
-  background: #276b80;
   cursor: pointer;
 }
 .wrapper{
@@ -185,12 +184,23 @@ body{
 #chat_input{
   display: none;
 }
-
+.chat{
+  position: relative;
+}
 #chat_text{
   margin: 3px 3px;
   width: 95%;
-  height: 200px;
-  resize: none;
+  height: 99%;
+}
+#opaque_gradient{
+  position: absolute;
+  height: 99%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  /* #e8f4f8 */
+  background-image: linear-gradient(to bottom, rgba(232,244,248,0), rgba(232,244,248,1));
 }
 
 #input_text{
@@ -247,6 +257,7 @@ footer{
   #chat_input{ padding: 0 25%;}
   #input_text{ border-radius: 0; padding: 0; }
   .generic_button{ border-radius: 0; }
+  .generic_button:hover{background: #276b80;}
 
   .scoreboard { flex: 1 0px; order: 1; }
   .drawingarea {  flex: 2 0px; order: 2; }

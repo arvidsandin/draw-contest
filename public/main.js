@@ -140,7 +140,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
   }
   else if (allowedToDraw.user.id != id){
     input.disabled = false;
-    chat.innerHTML = allowedToDraw.user.username + " is drawing<br>" + chat.innerHTML;
+    chat.innerHTML = allowedToDraw.user.htmlusername + " is drawing<br>" + chat.innerHTML;
     currentWord = null;
     textPlace.textContent = " ";
     belowCanvas.style.display = "none";
@@ -188,7 +188,7 @@ socket.on('timeLeft', function(time) {
 socket.on('scoreBoard', function(scoreBoard) {
   userlist.innerHTML = '';
   for (var i = 0; i < scoreBoard.length; i++) {
-    userlist.innerHTML += (scoreBoard[i].username + ':<nbsp>' + (scoreBoard[i].drawerPoints + scoreBoard[i].guesserPoints) + '<br>');
+    userlist.innerHTML += (scoreBoard[i].htmlusername + ':<nbsp>' + (scoreBoard[i].drawerPoints + scoreBoard[i].guesserPoints) + '<br>');
   }
 })
 // ---FUNCTIONS---

@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 var words = require('./words.json');
 var currentWord = "";
 var usersOnline=[];
-var theDrawer = {username:null, id:null};
+var theDrawer = {username:null, id:null, htmlusername:null};
 var brushColor = "#000000";
 var brushSize = 10;
 var timeLeft = 91;
@@ -22,10 +22,10 @@ setInterval(function(){
   if (timeLeft < 0 && usersOnline.length > 1) {
     timeLeft = 91;
     io.emit('message', {
-      text: 'Time ran out! The word was "' + currentWord + '"Randomizing new drawer...', username:null
+      text: 'Time ran out! The word was "' + currentWord + '". Randomizing new drawer...', username:null
     });
     var theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)]
-    while (theDrawer == theNewDrawer) {
+    while (theDrawer.id == theNewDrawer.id) {
       theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
     }
     theDrawer = theNewDrawer;
@@ -69,11 +69,11 @@ io.on('connection', function(socket){
     };
     console.log(info.username + ' connected');
     socket.broadcast.emit('message', {
-      text: info.username + ' has connected', username:null
+      text: encodeHTML(info.username) + ' has connected', username:null
     });
     if (usersOnline.length <= 0){
       currentWord = words[Math.floor(Math.random() * words.length)];
-      theDrawer = {username:username, id:id};
+      theDrawer = {username:username, id:id, htmlusername:encodeHTML(username)};
       socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
       timeLeft = 91;
       io.emit('timeLeft', {time: timeLeft});
@@ -104,7 +104,7 @@ io.on('connection', function(socket){
       usersOnline = usersOnline.filter(e => e.id != id);
       io.emit('scoreBoard', usersOnline);
       socket.broadcast.emit('message', {
-        text: username + ' has disconnected', username:null
+        text: userInfo.htmlusername + ' has disconnected', username:null
       });
       if (id == theDrawer.id){
         history = [];
@@ -139,7 +139,7 @@ io.on('connection', function(socket){
         usersOnline.find(user => user.id == theDrawer.id).drawerPoints += 1;
         usersOnline.find(user => user.id == id).guesserPoints += 1;
         // change drawer
-        theDrawer = {username:username, id:id};
+        theDrawer = {username:username, id:id, htmlusername:encodeHTML(username)};
         io.emit('scoreBoard', usersOnline);
         socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
         currentWord = words[Math.floor(Math.random() * words.length)];
