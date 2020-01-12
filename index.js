@@ -10,6 +10,7 @@ var brushColor = "#000000";
 var brushSize = 10;
 var timeLeft = 91;
 var history = [];
+var minMessageInterval = 200;
 
 
 app.use(express.static(__dirname + '/public'));
@@ -54,6 +55,7 @@ io.on('connection', function(socket){
   var username;
   var id;
   var userInfo;
+  var messageTimestamp = Date.now();
   socket.emit('init', {brushSize:brushSize, brushColor:brushColor, history: history});
   socket.emit('scoreBoard', usersOnline);
   socket.emit('timeLeft', {time:timeLeft});
@@ -129,7 +131,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('message', function(message){
-    if (id != theDrawer.id){
+    if (id != theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
       text = encodeHTML(message.text);
       socket.broadcast.emit('message', {text:text, username:encodeHTML(message.username)});
       socket.emit('message', {text:text, username:'You'});
@@ -153,6 +155,7 @@ io.on('connection', function(socket){
         }, 1500);
       }
     }
+    messageTimestamp = Date.now();
   });
 
   socket.on('stroke', function(stroke){
