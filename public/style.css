@@ -186,15 +186,19 @@ body{
 }
 .chat{
   position: relative;
+  overflow: auto;
+
+  /* fits 10 rows since lineheight is 1.3 */
+  height: calc(1.3*10em);
 }
 #chat_text{
   margin: 3px 3px;
   width: 95%;
-  height: 99%;
+  max-height: 99%;
 }
 #opaque_gradient{
   position: absolute;
-  height: 99%;
+  height: 100%;
   width: 100%;
   top: 0;
   left: 0;
@@ -261,6 +265,9 @@ footer{
 
   .scoreboard { flex: 1 0px; order: 1; }
   .drawingarea {  flex: 2 0px; order: 2; }
-  .chat { flex: 1 0px; order: 3; }
+
+  /* TODO: Better implementation for different screen sizes */
+  .chat { flex: 1 0px; order: 3; height: calc(1.3*25em);}
+  
   .chat_input { flex: 1 0px; order: 4; flex-basis: 100%; }
 }
