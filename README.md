@@ -7,13 +7,15 @@ A web app for a real-time draw-and-guess game using socket.io. Available at [htt
 
 * node.js
   - [Install link](https://nodejs.org/en/download/)
-* socket.io
-  - `npm install socket.io`
-* express
-  - `npm install express`
+
 
 ## Running
 
+First time to install socket.io and express
+```
+npm install
+```
+To start the server 
 ```
 node index.js
 ```
