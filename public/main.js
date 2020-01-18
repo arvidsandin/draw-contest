@@ -102,19 +102,19 @@ socket.on('init', function(conf){
 
 
 socket.on('disconnect', (reason) => {
-    chat.innerHTML = "You have disconnected<br>" + chat.innerHTML;
+    chat.innerHTML = " &#8226 You have disconnected<br>" + chat.innerHTML;
     userlist.innerHTML = "";
 });
 
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
-    chat.innerHTML = (message.text + "<br>" + chat.innerHTML);
+    chat.innerHTML = (" &#8226 " + message.text + "<br>" + chat.innerHTML);
   }
   else {
-    chat.innerHTML = message.username + ": " + message.text + "<br>" + chat.innerHTML;
+    chat.innerHTML = " &#8226 " + message.username + ": " + message.text + "<br>" + chat.innerHTML;
   }
-  textbox = document.getElementById('textbox');
+  // textbox = document.getElementById('textbox');
   // textbox.scrollTop = textbox.scrollHeight;
 });
 
@@ -130,7 +130,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
     input.disabled = true;
     currentWord = allowedToDraw.word;
     textPlace.textContent = "Your word is: " + currentWord;
-    chat.innerHTML = "You are drawing: " + currentWord + "<br>" + chat.innerHTML;
+    chat.innerHTML = " &#8226 You are drawing: " + currentWord + "<br>" + chat.innerHTML;
     belowCanvas.style.display = "flex";
     chat_input.style.display = "none";
     for (i = 0; i < modifyers.length; i++) {
@@ -140,7 +140,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
   }
   else if (allowedToDraw.user.id != id){
     input.disabled = false;
-    chat.innerHTML = allowedToDraw.user.htmlusername + " is drawing<br>" + chat.innerHTML;
+    chat.innerHTML = " &#8226 " + allowedToDraw.user.htmlusername + " is drawing<br>" + chat.innerHTML;
     currentWord = null;
     textPlace.textContent = " ";
     belowCanvas.style.display = "none";

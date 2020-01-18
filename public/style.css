@@ -85,6 +85,7 @@ body{
 
 .textbox{
   overflow: auto;
+  overflow-wrap: break-word;
   background-color: #E8F4F8;
   border: 1px solid black;
   margin: 8px 0;
