@@ -4,46 +4,49 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var words = require('./words.json');
 var currentWord = "";
-var usersOnline=[];
+var usersOnline = [];
 var theDrawer = {username:null, id:null, htmlusername:null};
 var brushColor = "#000000";
 var brushSize = 10;
-var timeLeft = 91;
 var history = [];
-var minMessageInterval = 200;
 
+//Magical numbers
+var timeLeft = 91;
+var minMessageInterval = 200;
+var newDrawerDelay = 1500;
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 80;
+}
+http.listen(port, function(){
+  console.log('listening on port ' + port);
+});
+
 setInterval(function(){
   timeLeft -= 1;
   if (timeLeft < 0 && usersOnline.length > 1) {
-    timeLeft = 91;
     io.emit('message', {
       text: 'Time ran out! The word was "' + currentWord + '". Randomizing new drawer...', username:null
     });
-    var theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)]
-    while (theDrawer.id == theNewDrawer.id) {
-      theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
-    }
-    theDrawer = theNewDrawer;
+    randomizeDrawer();
     io.emit('allowedToDraw', {
       bool:false, word:null, user:theDrawer
     });
     resetBrush();
-    currentWord = words[Math.floor(Math.random() * words.length)];
+    randomizeWord();
     setTimeout(function(){
       io.to(theDrawer.id).emit('allowedToDraw', {
         bool:true, word:currentWord, user:theDrawer
       });
-      io.emit('clearCanvas');
-      history = [];
-      timeLeft = 91;
-      io.emit('timeLeft', {time: timeLeft});
-    }, 1500);
+      resetCanvas();
+      resetTimer();
+    }, newDrawerDelay);
   }
 }, 1000);
 
@@ -52,20 +55,17 @@ setInterval(function(){
 }, 10000);
 
 io.on('connection', function(socket){
-  var username;
-  var id;
   var userInfo;
   var messageTimestamp = Date.now();
   socket.emit('init', {brushSize:brushSize, brushColor:brushColor, history: history});
   socket.emit('scoreBoard', usersOnline);
   socket.emit('timeLeft', {time:timeLeft});
   socket.on('connectInfo', function(info){
-    username = info.username;
     id = info.id;
     userInfo = {
-      username:username,
-      htmlusername:encodeHTML(username),
-      id:id,
+      username:info.username,
+      htmlusername:encodeHTML(info.username),
+      id:info.id,
       drawerPoints:0,
       guesserPoints:0
     };
@@ -74,11 +74,10 @@ io.on('connection', function(socket){
       text: encodeHTML(info.username) + ' has connected', username:null
     });
     if (usersOnline.length <= 0){
-      currentWord = words[Math.floor(Math.random() * words.length)];
-      theDrawer = {username:username, id:id, htmlusername:encodeHTML(username)};
+      randomizeWord();
+      theDrawer = userInfo;
       socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
-      timeLeft = 91;
-      io.emit('timeLeft', {time: timeLeft});
+      resetTimer();
     }
     else {
       socket.emit('allowedToDraw', {
@@ -90,9 +89,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('clearCanvas', (x) => {
-    if (id == theDrawer.id){
-      history = [];
-      io.emit('clearCanvas');
+    if (userInfo.id == theDrawer.id){
+      resetCanvas();
       history.push({color: brushColor, size: brushSize});
     }
   });
@@ -102,36 +100,34 @@ io.on('connection', function(socket){
       socket.connect();
     }
     else {
-      console.log(username + " disconnected");
-      usersOnline = usersOnline.filter(e => e.id != id);
+      console.log(userInfo.username + " disconnected");
+      usersOnline = usersOnline.filter(e => e.id != userInfo.id);
       io.emit('scoreBoard', usersOnline);
       socket.broadcast.emit('message', {
         text: userInfo.htmlusername + ' has disconnected', username:null
       });
-      if (id == theDrawer.id){
-        history = [];
+      if (userInfo.id == theDrawer.id){
+        resetCanvas();
         resetBrush();
         // If there are people left, randomize a new drawer
         if (usersOnline.length > 0){
-          theDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
+          randomizeDrawer();
           socket.broadcast.emit('allowedToDraw', {
             bool:false, word:null, user:theDrawer
           });
           resetBrush();
-          currentWord = words[Math.floor(Math.random() * words.length)];
+          randomizeWord();
           io.to(theDrawer.id).emit('allowedToDraw', {
             bool:true, word:currentWord, user:theDrawer
           });
-          io.emit('clearCanvas');
-          timeLeft = 91;
-          io.emit('timeLeft', {time: timeLeft});
+          resetTimer();
         }
       }
     }
   });
 
   socket.on('message', function(message){
-    if (id != theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
+    if (userInfo.id != theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
       text = encodeHTML(message.text);
       socket.broadcast.emit('message', {text:text, username:encodeHTML(message.username)});
       socket.emit('message', {text:text, username:'You'});
@@ -139,34 +135,32 @@ io.on('connection', function(socket){
         io.emit('message', {text:'Correct!', user:null});
         // Give points
         usersOnline.find(user => user.id == theDrawer.id).drawerPoints += 1;
-        usersOnline.find(user => user.id == id).guesserPoints += 1;
+        usersOnline.find(user => user.id == userInfo.id).guesserPoints += 1;
         // change drawer
-        theDrawer = {username:username, id:id, htmlusername:encodeHTML(username)};
+        theDrawer = userInfo;
         io.emit('scoreBoard', usersOnline);
         socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
-        currentWord = words[Math.floor(Math.random() * words.length)];
+        randomizeWord();
         setTimeout(function(){
           socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
           resetBrush();
-          io.emit('clearCanvas');
-          history = [];
-          timeLeft = 91;
-          io.emit('timeLeft', {time: timeLeft});
-        }, 1500);
+          resetCanvas();
+          resetTimer();
+        }, newDrawerDelay);
       }
     }
     messageTimestamp = Date.now();
   });
 
   socket.on('stroke', function(stroke){
-    if (id == theDrawer.id){
+    if (userInfo.id == theDrawer.id){
       history.push(stroke);
       socket.broadcast.emit('stroke', stroke);
     }
   });
 
   socket.on('changeBrush', function(brush){
-    if (id == theDrawer.id){
+    if (userInfo.id == theDrawer.id){
       history.push(brush);
       brushColor = brush.color;
       brushSize = brush.size;
@@ -175,15 +169,7 @@ io.on('connection', function(socket){
   });
 });
 
-
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 80;
-}
-http.listen(port, function(){
-  console.log('listening on *:80');
-});
-
+// ---FUNCTIONS---
 function encodeHTML(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
@@ -192,4 +178,26 @@ function resetBrush(){
   brushColor = '#000000';
   brushSize = 10;
   io.emit('changeBrush', {color:brushColor, size:brushSize});
+}
+
+function resetCanvas(){
+  io.emit('clearCanvas');
+  history = [];
+}
+
+function resetTimer(){
+  timeLeft = 91;
+  io.emit('timeLeft', {time: timeLeft});
+}
+
+function randomizeWord(){
+  currentWord = words[Math.floor(Math.random() * words.length)];
+}
+
+function randomizeDrawer(){
+  var theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)]
+  while (theDrawer.id == theNewDrawer.id) {
+    theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
+  }
+  theDrawer = theNewDrawer;
 }

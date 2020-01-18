@@ -1,4 +1,4 @@
-// ---InitialINITIAL VARIABLES---
+// ---INITIAL VARIABLES---
 var socket = io();
 
 //Canvas stuff
@@ -26,7 +26,7 @@ var chat = document.getElementById('chat_text');
 var timer = document.getElementById('timer');
 var timeLeft = -10;
 
-// ---EVENT LISTENERs---
+// ---EVENT LISTENERS---
 //Listen to mouse events
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
@@ -36,7 +36,7 @@ canvas.addEventListener('mousedown', (e) => {
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
-
+//listen to touch events
 canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
     var offset = canvas.getBoundingClientRect();
@@ -69,12 +69,15 @@ setInterval(function(){
 //Send initial info when connection
 socket.on('init', function(conf){
   username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+  var backupUsername = socket.id.substring(0, 5);
   if (username == undefined || username == ""){
-    username = window.prompt("What is your username?",username);
+    username = window.prompt("What is your username?",backupUsername);
     if (username == undefined || username == ""){
-      username = socket.id.substring(0, 5);
+      username = backupUsername;
     }
-    document.cookie = "username=" + username;
+    else {
+      document.cookie = "username=" + username;
+    }
   }
   id = socket.id;
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
@@ -91,9 +94,6 @@ socket.on('init', function(conf){
       ctx.lineWidth =  event.size;
     }
   }
-
-
-
   ctx.lineWidth = conf.brushSize;
   ctx.strokeStyle = conf.brushColor;
   socket.emit('connectInfo', {username:username, id:socket.id});
@@ -150,7 +150,6 @@ socket.on('allowedToDraw', function(allowedToDraw){
     };
     //TODO: Make cursor 'not-allowed'
   }
-  // chat.scrollTop = chat.scrollHeight;
 });
 
 //Display new strokes when someone else draws
