@@ -11,9 +11,9 @@ var brushSize = 10;
 var history = [];
 
 //Magical numbers
-var timeLeft = 91;
-var minMessageInterval = 200;
-var newDrawerDelay = 1500;
+var timeLeft = 91; //in seconds
+var minMessageInterval = 200; //in milliseconds
+var newDrawerDelay = 1500; //in milliseconds
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
@@ -28,6 +28,7 @@ http.listen(port, function(){
   console.log('listening on port ' + port);
 });
 
+//lower timer every second and check if time is out
 setInterval(function(){
   timeLeft -= 1;
   if (timeLeft < 0 && usersOnline.length > 1) {
@@ -50,6 +51,7 @@ setInterval(function(){
   }
 }, 1000);
 
+//sync time every 10 s
 setInterval(function(){
   io.emit('timeLeft', {time:timeLeft});
 }, 10000);
@@ -61,7 +63,6 @@ io.on('connection', function(socket){
   socket.emit('scoreBoard', usersOnline);
   socket.emit('timeLeft', {time:timeLeft});
   socket.on('connectInfo', function(info){
-    id = info.id;
     userInfo = {
       username:info.username,
       htmlusername:encodeHTML(info.username),
@@ -129,7 +130,7 @@ io.on('connection', function(socket){
   socket.on('message', function(message){
     if (userInfo.id != theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
       text = encodeHTML(message.text);
-      socket.broadcast.emit('message', {text:text, username:encodeHTML(message.username)});
+      socket.broadcast.emit('message', {text:text, username:userInfo.username});
       socket.emit('message', {text:text, username:'You'});
       if (message.text.toLowerCase() == currentWord) {
         io.emit('message', {text:'Correct!', user:null});
