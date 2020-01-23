@@ -241,11 +241,12 @@ body{
   left:0;
   margin: 0;
   height: 2em;
+  line-height: 2em;
   width: 100%;
   background: #9DC8D6;
 }
 #bottom_row{
-  margin: 3px 15px;
+  margin: 0 15px;
 }
 
 
