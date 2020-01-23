@@ -72,7 +72,7 @@ socket.on('init', function(conf){
   var backupUsername = socket.id.substring(0, 5);
   if (username == undefined || username == ""){
     username = window.prompt("What is your username?",backupUsername);
-    if (username == undefined || username == ""){
+    if (username == undefined || username == "" || username == null){
       username = backupUsername;
     }
     else {

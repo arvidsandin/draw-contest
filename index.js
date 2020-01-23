@@ -72,7 +72,7 @@ io.on('connection', function(socket){
     };
     console.log(info.username + ' connected');
     socket.broadcast.emit('message', {
-      text: encodeHTML(info.username) + ' has connected', username:null
+      text: userInfo.htmlusername + ' has connected', username:null
     });
     if (usersOnline.length <= 0){
       randomizeWord();
