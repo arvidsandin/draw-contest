@@ -68,15 +68,16 @@ setInterval(function(){
 // ---SOCKET LISTENERS---
 //Send initial info when connection
 socket.on('init', function(conf){
-  username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+  username = sessionStorage.getItem("username");
+  console.log(username);
   var backupUsername = socket.id.substring(0, 5);
-  if (username == undefined || username == ""){
+  if (username == undefined || username == "" || username == null){
     username = window.prompt("What is your username?",backupUsername);
     if (username == undefined || username == "" || username == null){
       username = backupUsername;
     }
     else {
-      document.cookie = "username=" + username;
+      sessionStorage.setItem("username", username);
     }
   }
   id = socket.id;
