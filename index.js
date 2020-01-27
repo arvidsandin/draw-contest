@@ -16,9 +16,6 @@ var minMessageInterval = 200; //in milliseconds
 var newDrawerDelay = 1500; //in milliseconds
 
 app.use(express.static(__dirname + '/public'));
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/public/index.html');
-});
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -100,7 +97,7 @@ io.on('connection', function(socket){
     if (reason === 'io server disconnect') {
       socket.connect();
     }
-    else {
+    else if(userInfo != undefined){
       console.log(userInfo.username + " disconnected");
       usersOnline = usersOnline.filter(e => e.id != userInfo.id);
       io.emit('scoreBoard', usersOnline);
