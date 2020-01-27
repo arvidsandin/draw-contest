@@ -41,6 +41,8 @@ setInterval(function(){
     });
     resetBrush();
     randomizeWord();
+    //reset to prevent time running out during setTimeout()
+    resetTimer();
     setTimeout(function(){
       io.to(theDrawer.id).emit('allowedToDraw', {
         bool:true, word:currentWord, user:theDrawer
@@ -142,6 +144,8 @@ io.on('connection', function(socket){
         io.emit('scoreBoard', usersOnline);
         socket.broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
         randomizeWord();
+        // reset timer in case there is less than [newDrawerDelay] time left
+        resetTimer();
         setTimeout(function(){
           socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
           resetBrush();
