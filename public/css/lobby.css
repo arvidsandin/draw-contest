@@ -51,6 +51,9 @@ body{
 .generic_button:hover{
   cursor: pointer;
 }
+#join__button{
+  padding: 10px 25px;
+}
 .wrapper{
   margin: 8px;
   display: flex;
@@ -72,6 +75,19 @@ body{
   background-color: #E8F4F8;
   border: 1px solid black;
   margin: 8px 0;
+}
+#main{
+  display: inline-block;
+  text-align: center;
+}
+#room_list{
+  font-size: 16pt;
+  padding: 10px;
+  text-align: left;
+}
+#room_list > label{
+  display: inline-block;
+  width: 100%;
 }
 
 .footer{
@@ -99,6 +115,14 @@ body{
     margin-left: 5px;
     margin-right: 5px;
   }
+  #room_list{
+    display: inline-block;
+    width: 250px;
+  }
+  #join__button{
+    display: inline-block;
+  }
+
   .generic_button{ border-radius: 0; }
   .generic_button:hover{background: #276b80;}
 }
