@@ -65,8 +65,9 @@ body{
   flex: 1 100%;
 }
 
-.wrapper-item {
+.wrapper_item {
   padding: 0;
+  margin: 15px 0;
 }
 
 .textbox{
@@ -75,6 +76,7 @@ body{
   background-color: #E8F4F8;
   border: 1px solid black;
   margin: 8px 0;
+  padding: 0 10px;
 }
 #main{
   display: inline-block;
@@ -112,8 +114,18 @@ body{
 @media all and (min-width: 800px) {
   h1 { padding: 10px 0 5px 0; }
   .wrapper_item {
+    flex:1 0;
     margin-left: 5px;
     margin-right: 5px;
+  }
+  #sidebar_left{
+    order:1;
+  }
+  #main{
+    order: 2;
+  }
+  #sidebar_right{
+    order:3;
   }
   #room_list{
     display: inline-block;

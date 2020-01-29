@@ -97,7 +97,7 @@ socket.on('init', function(conf){
   }
   ctx.lineWidth = conf.brushSize;
   ctx.strokeStyle = conf.brushColor;
-  socket.emit('connectInfo', {username:username, id:socket.id});
+  socket.emit('connectInfo', {username:username, id:socket.id, room:sessionStorage.getItem("room")});
 });
 
 

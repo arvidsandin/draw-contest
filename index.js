@@ -3,12 +3,15 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var words = require('./words.json');
+var fs = require('fs');
 var currentWord = "";
 var usersOnline = [];
 var theDrawer = {username:null, id:null, htmlusername:null};
 var brushColor = "#000000";
 var brushSize = 10;
 var history = [];
+var rooms = [{"name":"Room 1","players":0}]
+updateRooms();
 
 //Magical numbers
 var timeLeft = 91; //in seconds
@@ -65,8 +68,14 @@ io.on('connection', function(socket){
       htmlusername:encodeHTML(info.username),
       id:info.id,
       drawerPoints:0,
-      guesserPoints:0
+      guesserPoints:0,
+      room:info.room
     };
+    var roomToUpdate = rooms.find(roomToAddplayerTo => roomToAddplayerTo.name == info.room);
+    if (roomToUpdate != undefined) {
+      roomToUpdate.players += 1;
+      updateRooms();
+    }
     console.log(info.username + ' connected');
     socket.broadcast.emit('message', {
       text: userInfo.htmlusername + ' has connected', username:null
@@ -99,6 +108,11 @@ io.on('connection', function(socket){
     }
     else if(userInfo != undefined){
       console.log(userInfo.username + " disconnected");
+      var roomToUpdate = rooms.find(roomToAddplayerTo => roomToAddplayerTo.name == userInfo.room);
+      if (roomToUpdate != undefined) {
+        roomToUpdate.players -= 1;
+        updateRooms();
+      }
       usersOnline = usersOnline.filter(e => e.id != userInfo.id);
       io.emit('scoreBoard', usersOnline);
       socket.broadcast.emit('message', {
@@ -198,4 +212,13 @@ function randomizeDrawer(){
     theNewDrawer = usersOnline[Math.floor(Math.random() * usersOnline.length)];
   }
   theDrawer = theNewDrawer;
+}
+
+function updateRooms(){
+  var jsonData = JSON.stringify(rooms);
+  fs.writeFile("public/rooms.json", jsonData, function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
 }

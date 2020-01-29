@@ -1,6 +1,6 @@
 function Get(link){
     var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open("GET",link,false);
+    Httpreq.open('GET',link,false);
     Httpreq.send(null);
     return Httpreq.responseText;
 }
@@ -8,17 +8,18 @@ var roomList = document.getElementById('room_list');
 var oldRooms = document.getElementsByClassName('room_label');
 while (oldRooms.length != 0) {roomList.removeChild(oldRooms[0]);}
 
-var rooms = JSON.parse(Get("./rooms.json"));
+var rooms = JSON.parse(Get('./rooms.json'));
 for (var i = 0; i < rooms.length; i++) {
-  var label = document.createElement("label");
-  label.className = "room_label";
-  label.name = "rooms";
-  var input = document.createElement("input");
-  input.type = "radio";
-  input.className = "room_radio";
+  var label = document.createElement('label');
+  label.className = 'room_label';
+  label.name = 'rooms';
+  var input = document.createElement('input');
+  input.type = 'radio';
+  input.className = 'room_radio';
   input.value = rooms[i].name;
-  var span = document.createElement("span");
-  span.innerHTML = rooms[i].name;
+  input.name = 'room';
+  var span = document.createElement('span');
+  span.innerHTML = rooms[i].name + ': ' + rooms[i].players + 'players';
   label.appendChild(input);
   label.appendChild(span);
   roomList.appendChild(label);
@@ -32,4 +33,6 @@ function joinRoom(){
     }
   }
   console.log(selectedRoom);
+  sessionStorage.setItem('room', selectedRoom);
+  window.location.href = 'play';
 }
