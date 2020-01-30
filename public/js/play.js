@@ -68,18 +68,7 @@ setInterval(function(){
 // ---SOCKET LISTENERS---
 //Send initial info when connection
 socket.on('init', function(conf){
-  username = sessionStorage.getItem("username");
-  console.log(username);
-  var backupUsername = socket.id.substring(0, 5);
-  if (username == undefined || username == "" || username == null){
-    username = window.prompt("What is your username?",backupUsername);
-    if (username == undefined || username == "" || username == null){
-      username = backupUsername;
-    }
-    else {
-      sessionStorage.setItem("username", username);
-    }
-  }
+  askUsername();
   id = socket.id;
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
   for (var i = 0; i < conf.history.length; i++){
@@ -265,4 +254,18 @@ function show_sizes(){
   }, 500);
 }
 function hide_sizes(){
+}
+function askUsername(){
+  username = sessionStorage.getItem("username");
+  console.log(username);
+  var backupUsername = socket.id.substring(0, 5);
+  if (username == undefined || username == "" || username == null){
+    username = window.prompt("What is your username?",backupUsername);
+    if (username == undefined || username == "" || username == null){
+      username = backupUsername;
+    }
+    else {
+      sessionStorage.setItem("username", username);
+    }
+  }
 }

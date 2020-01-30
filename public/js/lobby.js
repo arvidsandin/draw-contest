@@ -7,6 +7,7 @@ function Get(link){
 var roomList = document.getElementById('room_list');
 var oldRooms = document.getElementsByClassName('room_label');
 while (oldRooms.length != 0) {roomList.removeChild(oldRooms[0]);}
+askUsername();
 
 var rooms = JSON.parse(Get('./rooms.json'));
 for (var i = 0; i < rooms.length; i++) {
@@ -19,7 +20,7 @@ for (var i = 0; i < rooms.length; i++) {
   input.value = rooms[i].name;
   input.name = 'room';
   var span = document.createElement('span');
-  span.innerHTML = rooms[i].name + ': ' + rooms[i].players + 'players';
+  span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' players';
   label.appendChild(input);
   label.appendChild(span);
   roomList.appendChild(label);
@@ -32,7 +33,24 @@ function joinRoom(){
       var selectedRoom = availableRooms[i].value;
     }
   }
-  console.log(selectedRoom);
-  sessionStorage.setItem('room', selectedRoom);
-  window.location.href = 'play';
+  if (selectedRoom != undefined) {
+    console.log(selectedRoom);
+    sessionStorage.setItem('room', selectedRoom);
+    window.location.href = 'play';
+  }
+  else {
+    window.alert('You need to choose a room');
+  }
+}
+function askUsername(){
+  var username = sessionStorage.getItem("username");
+  console.log(username);
+  if (username == undefined || username == "" || username == null){
+    username = window.prompt("What is your username?");
+    if (username == undefined || username == "" || username == null){
+    }
+    else {
+      sessionStorage.setItem("username", username);
+    }
+  }
 }
