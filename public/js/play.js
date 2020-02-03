@@ -67,9 +67,11 @@ setInterval(function(){
 
 // ---SOCKET LISTENERS---
 //Send initial info when connection
-socket.on('init', function(conf){
+socket.on('init', function(){
   askUsername();
-  id = socket.id;
+  socket.emit('connectInfo', {username:username, room:sessionStorage.getItem("room")});
+});
+socket.on('history', function(conf){
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
   for (var i = 0; i < conf.history.length; i++){
     event = conf.history[i]
@@ -84,9 +86,9 @@ socket.on('init', function(conf){
       ctx.lineWidth =  event.size;
     }
   }
+
   ctx.lineWidth = conf.brushSize;
   ctx.strokeStyle = conf.brushColor;
-  socket.emit('connectInfo', {username:username, id:socket.id, room:sessionStorage.getItem("room")});
 });
 
 
@@ -197,7 +199,7 @@ function changeBrushSize(newSize) {
 }
 
 function clearCanvas() {
-  socket.emit('clearCanvas', {});
+  socket.emit('clearCanvas');
 }
 
 function draw(e) {
@@ -257,7 +259,6 @@ function hide_sizes(){
 }
 function askUsername(){
   username = sessionStorage.getItem("username");
-  console.log(username);
   var backupUsername = socket.id.substring(0, 5);
   if (username == undefined || username == "" || username == null){
     username = window.prompt("What is your username?",backupUsername);
