@@ -43,14 +43,14 @@ function joinRoom(){
   }
 }
 function askUsername(){
-  var username = sessionStorage.getItem("username");
+  var username = sessionStorage.getItem('username');
   console.log(username);
-  if (username == undefined || username == "" || username == null){
-    username = window.prompt("What is your username?");
-    if (username == undefined || username == "" || username == null){
+  if (username == undefined || username == '' || username == null){
+    username = window.prompt('What is your username?');
+    if (username == undefined || username == '' || username == null){
     }
     else {
-      sessionStorage.setItem("username", username);
+      sessionStorage.setItem('username', username);
     }
   }
 }

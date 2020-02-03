@@ -4,13 +4,13 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var words = require('./words.json');
 var fs = require('fs');
-var currentWord = "";
+var currentWord = '';
 var usersOnline = [];
 var theDrawer = {username:null, id:null, htmlusername:null};
-var brushColor = "#000000";
+var brushColor = '#000000';
 var brushSize = 10;
 var history = [];
-var jsonRooms = [{"name":"Room 1","players":0}, {"name":"Room 2","players":0}];
+var jsonRooms = [{'name':'Room 1','players':0}, {'name':'Room 2','players':0}];
 var rooms = [];
 /*
 A room looks like this:
@@ -37,7 +37,7 @@ var newDrawerDelay = 1500; //in milliseconds
 app.use(express.static(__dirname + '/public'));
 
 var port = process.env.PORT;
-if (port == null || port == "") {
+if (port == null || port == '') {
   port = 80;
 }
 http.listen(port, function(){
@@ -50,7 +50,7 @@ setInterval(function(){
     rooms[i].timeLeft -= 1;
     if (rooms[i].timeLeft < 0 && rooms[i].players.length > 1) {
       io.to(rooms[i].name).emit('message', {
-        text: 'Time ran out! The word was "' + rooms[i].currentWord + '". Randomizing new drawer...', username:null
+        text: 'Time ran out! The word was '' + rooms[i].currentWord + ''. Randomizing new drawer...', username:null
       });
       randomizeDrawer(rooms[i]);
       io.to(rooms[i].name).emit('allowedToDraw', {
@@ -141,7 +141,7 @@ io.on('connection', function(socket){
       socket.connect();
     }
     else if(userInfo != undefined){
-      console.log(userInfo.username + " disconnected");
+      console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
       io.to(currentRoom).emit('scoreBoard', usersOnline);
       updateRooms();
@@ -251,7 +251,7 @@ function getRoom(roomName){
 
 function updateRooms(){
   var jsonData = JSON.stringify(jsonRooms);
-  fs.writeFile("public/rooms.json", jsonData, function(err) {
+  fs.writeFile('public/rooms.json', jsonData, function(err) {
     if (err) {
         console.log(err);
     }
