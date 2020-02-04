@@ -85,48 +85,51 @@ io.on('connection', function(socket){
   socket.emit('scoreBoard', usersOnline);
   socket.emit('timeLeft', {time:timeLeft});
   socket.on('connectInfo', function(info){
-    userInfo = {
-      username:info.username,
-      htmlusername:encodeHTML(info.username),
-      id:socket.id,
-      drawerPoints:0,
-      guesserPoints:0,
-      roomName:info.room
-    };
-    socket.join(userInfo.roomName);
-    currentRoom = getRoom(userInfo.roomName);
-    if (currentRoom != undefined) {
-      currentRoom.players.push(userInfo);
-      socket.emit('history', {brushSize:currentRoom.brushSize, brushColor:currentRoom.brushColor, history:currentRoom.history});
-      socket.emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
+    if(info.room == null || info.room == '' || info.username == null || info.username == ''){
+      socket.disconnect();
     }
-    else {
-      currentRoom = {
-        name: userInfo.roomName,
-        htmlName: encodeHTML(userInfo.roomName),
-        players: [userInfo],
-        theDrawer: userInfo,
-        brushColor:'',
-        brushSize: 0,
-        currentWord: '',
-        history: [],
-        timeLeft: 91,
+    else{
+      userInfo = {
+        username:info.username,
+        htmlusername:encodeHTML(info.username),
+        id:socket.id,
+        drawerPoints:0,
+        guesserPoints:0,
+        roomName:info.room
+      };
+      socket.join(userInfo.roomName);
+      currentRoom = getRoom(userInfo.roomName);
+      if (currentRoom != undefined) {
+        currentRoom.players.push(userInfo);
+        socket.emit('history', {brushSize:currentRoom.brushSize, brushColor:currentRoom.brushColor, history:currentRoom.history});
+        socket.emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
       }
-      rooms.push(currentRoom);
-      randomizeWord(currentRoom);
-      socket.emit('allowedToDraw', {bool:true, word: currentRoom.currentWord, user:userInfo});
-      resetTimer(currentRoom);
-      resetBrush(currentRoom);
-      resetCanvas(currentRoom);
+      else {
+        currentRoom = {
+          name: userInfo.roomName,
+          htmlName: encodeHTML(userInfo.roomName),
+          players: [userInfo],
+          theDrawer: userInfo,
+          brushColor:'',
+          brushSize: 0,
+          currentWord: '',
+          history: [],
+          timeLeft: 91,
+        }
+        rooms.push(currentRoom);
+        randomizeWord(currentRoom);
+        socket.emit('allowedToDraw', {bool:true, word: currentRoom.currentWord, user:userInfo});
+        resetTimer(currentRoom);
+        resetBrush(currentRoom);
+        resetCanvas(currentRoom);
+      }
+      updateRooms();
+      console.log(info.username + ' connected');
+      socket.to(userInfo.room).broadcast.emit('message', {
+        text: userInfo.htmlusername + ' has connected', username:null
+      });
+      io.emit('scoreBoard', currentRoom.players);
     }
-    updateRooms();
-    console.log(info.username + ' connected');
-    socket.to(userInfo.room).broadcast.emit('message', {
-      text: userInfo.htmlusername + ' has connected', username:null
-    });
-    io.emit('scoreBoard', currentRoom.players);
-
-
   });
 
   socket.on('clearCanvas', (x) => {
@@ -140,7 +143,11 @@ io.on('connection', function(socket){
     if (reason === 'io server disconnect') {
       socket.connect();
     }
-    else if(userInfo != undefined){
+    else if(userInfo != undefined &&
+            userInfo.roomName != null &&
+            userInfo.roomName != '' &&
+            userInfo.name != undefined &&
+            userInfo.name!= ''){
       console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
       io.to(currentRoom).emit('scoreBoard', usersOnline);
