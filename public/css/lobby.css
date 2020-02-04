@@ -53,9 +53,17 @@ body{
 }
 #join__button{
   padding: 10px 25px;
+  font-size: 16pt;
+}
+#create_room_input{
+  height: 28px;
+}
+#button_create{
+  height: 28px;
+  line-height: inherit;
 }
 .wrapper{
-  margin: 8px;
+  margin: 8px 8px 0 8px;
   display: flex;
   flex-flow: wrap;
   padding-bottom: 3em;

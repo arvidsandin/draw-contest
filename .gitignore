@@ -63,3 +63,5 @@ typings/
 package-lock.json
 
 dev_commands.md
+
+public/rooms.json

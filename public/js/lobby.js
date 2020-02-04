@@ -1,8 +1,8 @@
 function Get(link){
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open('GET',link,false);
-    Httpreq.send(null);
-    return Httpreq.responseText;
+  var Httpreq = new XMLHttpRequest(); // a new request
+  Httpreq.open('GET',link,false);
+  Httpreq.send(null);
+  return Httpreq.responseText;
 }
 var roomList = document.getElementById('room_list');
 var oldRooms = document.getElementsByClassName('room_label');
@@ -34,7 +34,6 @@ function joinRoom(){
     }
   }
   if (selectedRoom != undefined) {
-    console.log(selectedRoom);
     sessionStorage.setItem('room', selectedRoom);
     window.location.href = 'play';
   }
@@ -44,7 +43,6 @@ function joinRoom(){
 }
 function askUsername(){
   var username = sessionStorage.getItem('username');
-  console.log(username);
   if (username == undefined || username == '' || username == null){
     username = window.prompt('What is your username?');
     if (username == undefined || username == '' || username == null){
@@ -52,5 +50,23 @@ function askUsername(){
     else {
       sessionStorage.setItem('username', username);
     }
+  }
+}
+
+function createRoom(){
+  var name = document.getElementById('create_room_input').value;
+  var availableRooms = document.getElementsByClassName('room_radio');
+  var nameIsAvailable = true;
+  for (var i = 0; i < availableRooms.length; i++) {
+    if (availableRooms[i].value == name) {
+      nameIsAvailable = false;
+    }
+  }
+  if (nameIsAvailable && name != '' && name != undefined) {
+    sessionStorage.setItem('room', name);
+    window.location.href = 'play';
+  }
+  else{
+    window.alert('This room name is already taken');
   }
 }

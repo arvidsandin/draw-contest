@@ -1,54 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <link rel="stylesheet" href="/css/lobby.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draw contest!</title>
+<head>
+  <link rel="stylesheet" href="/css/lobby.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draw contest!</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    <link rel="manifest" href="/icons/site.webmanifest">
-    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="/icons/favicon.ico">
-    <meta name="msapplication-TileColor" content="#2d89ef">
-    <meta name="msapplication-config" content="/icons/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-  </head>
-  <body>
-    <h1>Draw contest</h1>
-    <div class="wrapper">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="manifest" href="/icons/site.webmanifest">
+  <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="/icons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#2d89ef">
+  <meta name="msapplication-config" content="/icons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+  <h1>Draw contest</h1>
+  <div class="wrapper">
+    <div class="wrapper_item" id="main">
+      <div id="room_list" class="textbox">
+        <label class="room_label" name="rooms">
+          <input type="radio" class="room_radio" name="room" value="room1">
+          <span>Room 1</span>
+        </label>
+        <label class="room_label" name="rooms">
+          <input type="radio" class="room_radio" name="room" value="room2">
+          <span>Room 2</span>
+        </label>
+        <label class="room_label" name="rooms">
+          <input type="radio" class="room_radio" name="room" value="room3">
+          <span>Room 3</span>
+        </label>
+      </div>
+      <br>
+      <button type="button" class="generic_button" id="join__button" name="button" onclick="joinRoom()">Join</button>
+    </div>
+    <div class="wrapper_item" id="sidebar_left">
+      <div class="textbox">
+        <p>Welcome to Draw contest!</p>
+      </div>
+    </div>
     <div class="wrapper_item" id="sidebar_right">
-    </div>
-      <div class="wrapper_item" id="main">
-        <div id="room_list" class="textbox">
-          <label class="room_label" name="rooms">
-            <input type="radio" class="room_radio" name="room" value="room1">
-            <span>Room 1</span>
-          </label>
-          <label class="room_label" name="rooms">
-            <input type="radio" class="room_radio" name="room" value="room2">
-            <span>Room 2</span>
-          </label>
-          <label class="room_label" name="rooms">
-            <input type="radio" class="room_radio" name="room" value="room3">
-            <span>Room 3</span>
-          </label>
-        </div>
-        <br>
-        <button type="button" class="generic_button" id="join__button" name="button" onclick="joinRoom()">Join</button>
-      </div>
-      <div class="wrapper_item" id="sidebar_left">
-        <div class="textbox">
-          <p>Welcome to Draw contest!</p>
-        </div>
+      <div class="textbox">
+        <p>Create a room!</p>
+        <p>
+          Name: <input type="text" id="create_room_input"> <input type="button" value="Create" class="generic_button" id="button_create" onclick="createRoom()">
+        </p>
       </div>
     </div>
-    <div class="footer">
-      <p id="bottom_row"> Made by: <a href="https://github.com/arvidsandin">arvidsandin</a></p>
-    </div>
-    <script src="/js/lobby.js"></script>
-  </body>
+  </div>
+  <div class="footer">
+    <p id="bottom_row"> Made by: <a href="https://github.com/arvidsandin">arvidsandin</a></p>
+  </div>
+  <script src="/js/lobby.js"></script>
+</body>
 </html>
