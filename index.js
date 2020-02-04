@@ -254,7 +254,6 @@ function getRoom(roomName){
 
 function updateRooms(){
   jsonRooms = [];
-  console.log(rooms);
   for (var i = 0; i < rooms.length; i++) {
     jsonRooms.push({name:rooms[i].name, players:rooms[i].players.length});
   }
