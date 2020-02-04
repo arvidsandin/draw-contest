@@ -4,12 +4,6 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var words = require('./words.json');
 var fs = require('fs');
-var currentWord = '';
-var usersOnline = [];
-var theDrawer = {username:null, id:null, htmlusername:null};
-var brushColor = '#000000';
-var brushSize = 10;
-var history = [];
 var jsonRooms = [];
 var rooms = [];
 /*
@@ -25,7 +19,6 @@ var room = {
   history: [],
   timeLeft: 91,
 };
-
 */
 updateRooms();
 
