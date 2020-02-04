@@ -146,8 +146,8 @@ io.on('connection', function(socket){
     else if(userInfo != undefined &&
             userInfo.roomName != null &&
             userInfo.roomName != '' &&
-            userInfo.name != undefined &&
-            userInfo.name!= ''){
+            userInfo.username != undefined &&
+            userInfo.username!= ''){
       console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
       io.to(currentRoom).emit('scoreBoard', usersOnline);
