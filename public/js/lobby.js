@@ -5,38 +5,51 @@ function Get(link){
   return Httpreq.responseText;
 }
 
-askUsername();
 var roomList = document.getElementById('room_list');
-var oldRooms = document.getElementsByClassName('room_label');
+var newRoomNameInput = document.getElementById("create_room_input");
+refreshRooms();
+setInterval(refreshRooms, 5000);
 
-while (oldRooms.length != 0) {roomList.removeChild(oldRooms[0]);}
-var rooms = JSON.parse(Get('./rooms.json'));
-if (rooms.length==0){
+newRoomNameInput.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("button_create").click();
+  }
+});
+askUsername();
+
+
+function refreshRooms(){
+  var rooms = JSON.parse(Get('./rooms.json'));
+  while (roomList.firstChild) {roomList.removeChild(roomList.firstChild);}
+  if (rooms.length==0){
     var p = document.createElement('p');
-    p.innerHTML = 'There are no available rooms right now';
+    p.innerHTML = 'There are no available rooms right now. Feel free to create a new one!';
     p.style = 'font-size:12pt'
     roomList.appendChild(p);
-}
-else{
-  for (var i = 0; i < rooms.length; i++) {
-    var label = document.createElement('label');
-    label.className = 'room_label';
-    label.name = 'rooms';
-    var input = document.createElement('input');
-    input.type = 'radio';
-    input.className = 'room_radio';
-    input.value = rooms[i].name;
-    input.name = 'room';
-    var span = document.createElement('span');
-    if (rooms[i].players != 1){
-      span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' players';
+  }
+  else{
+    for (var i = 0; i < rooms.length; i++) {
+      var label = document.createElement('label');
+      label.className = 'room_label';
+      label.name = 'rooms';
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.className = 'room_radio';
+      input.value = rooms[i].name;
+      input.name = 'room';
+      var span = document.createElement('span');
+      if (rooms[i].players != 1){
+        span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' players';
+      }
+      else{
+        span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' player';
+      }
+      label.appendChild(input);
+      label.appendChild(span);
+      roomList.appendChild(label);
     }
-    else{
-      span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' player';
-    }
-    label.appendChild(input);
-    label.appendChild(span);
-    roomList.appendChild(label);
   }
 }
 
