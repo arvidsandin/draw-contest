@@ -10,7 +10,7 @@ var theDrawer = {username:null, id:null, htmlusername:null};
 var brushColor = '#000000';
 var brushSize = 10;
 var history = [];
-var jsonRooms = [{'name':'Room 1','players':0}, {'name':'Room 2','players':0}];
+var jsonRooms = [];
 var rooms = [];
 /*
 A room looks like this:
@@ -50,7 +50,7 @@ setInterval(function(){
     rooms[i].timeLeft -= 1;
     if (rooms[i].timeLeft < 0 && rooms[i].players.length > 1) {
       io.to(rooms[i].name).emit('message', {
-        text: 'Time ran out! The word was '' + rooms[i].currentWord + ''. Randomizing new drawer...', username:null
+        text: 'Time ran out! The word was "' + rooms[i].currentWord + '". Randomizing new drawer...', username:null
       });
       randomizeDrawer(rooms[i]);
       io.to(rooms[i].name).emit('allowedToDraw', {
@@ -97,7 +97,6 @@ io.on('connection', function(socket){
     currentRoom = getRoom(userInfo.roomName);
     if (currentRoom != undefined) {
       currentRoom.players.push(userInfo);
-      updateRooms();
       socket.emit('history', {brushSize:currentRoom.brushSize, brushColor:currentRoom.brushColor, history:currentRoom.history});
       socket.emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
     }
@@ -120,6 +119,7 @@ io.on('connection', function(socket){
       resetBrush(currentRoom);
       resetCanvas(currentRoom);
     }
+    updateRooms();
     console.log(info.username + ' connected');
     socket.to(userInfo.room).broadcast.emit('message', {
       text: userInfo.htmlusername + ' has connected', username:null
@@ -144,7 +144,6 @@ io.on('connection', function(socket){
       console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
       io.to(currentRoom).emit('scoreBoard', usersOnline);
-      updateRooms();
       socket.to(currentRoom.name).broadcast.emit('message', {
         text: userInfo.htmlusername + ' has disconnected', username:null
       });
@@ -158,14 +157,18 @@ io.on('connection', function(socket){
           socket.to(currentRoom.name).broadcast.emit('allowedToDraw', {
             bool:false, word:null, user:theDrawer
           });
-          resetBrush(currentRoom);
           randomizeWord(currentRoom);
           io.to(currentRoom.theDrawer.id).emit('allowedToDraw', {
             bool:true, word:currentWord, user:theDrawer
           });
           resetTimer(currentRoom);
         }
+        // Remove room if it is empty
+        else {
+          rooms = rooms.filter(room => room.name != currentRoom.name);
+        }
       }
+      updateRooms();
     }
   });
 
@@ -214,7 +217,7 @@ io.on('connection', function(socket){
 
 // ---FUNCTIONS---
 function encodeHTML(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
 function resetBrush(room){
@@ -250,6 +253,11 @@ function getRoom(roomName){
 }
 
 function updateRooms(){
+  jsonRooms = [];
+  console.log(rooms);
+  for (var i = 0; i < rooms.length; i++) {
+    jsonRooms.push({name:rooms[i].name, players:rooms[i].players.length});
+  }
   var jsonData = JSON.stringify(jsonRooms);
   fs.writeFile('public/rooms.json', jsonData, function(err) {
     if (err) {
