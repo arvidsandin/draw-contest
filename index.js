@@ -23,7 +23,7 @@ var room = {
 updateRooms();
 
 //Magical numbers
-var timeLeft = 91; //in seconds
+var roundTime = 91; //in seconds
 var minMessageInterval = 200; //in milliseconds
 var newDrawerDelay = 1500; //in milliseconds
 
@@ -75,8 +75,6 @@ io.on('connection', function(socket){
   var currentRoom;
   var messageTimestamp = Date.now();
   socket.emit('init');
-  socket.emit('scoreBoard', usersOnline);
-  socket.emit('timeLeft', {time:timeLeft});
   socket.on('connectInfo', function(info){
     if(info.room == null || info.room == '' || info.username == null || info.username == ''){
       socket.disconnect();
@@ -107,7 +105,7 @@ io.on('connection', function(socket){
           brushSize: 0,
           currentWord: '',
           history: [],
-          timeLeft: 91,
+          timeLeft: roundTime,
         }
         rooms.push(currentRoom);
         randomizeWord(currentRoom);
@@ -121,6 +119,7 @@ io.on('connection', function(socket){
       socket.to(userInfo.room).broadcast.emit('message', {
         text: userInfo.htmlusername + ' has connected', username:null
       });
+      socket.emit('timeLeft', currentRoom.timeLeft);
       io.emit('scoreBoard', currentRoom.players);
     }
   });
@@ -128,7 +127,7 @@ io.on('connection', function(socket){
   socket.on('clearCanvas', (x) => {
     if (userInfo.id == currentRoom.theDrawer.id){
       resetCanvas(currentRoom);
-      currentRoom.history.push({color: brushColor, size: brushSize});
+      resetBrush(currentRoom);
     }
   });
 
@@ -143,7 +142,7 @@ io.on('connection', function(socket){
             userInfo.username!= ''){
       console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
-      io.to(currentRoom).emit('scoreBoard', usersOnline);
+      io.to(currentRoom).emit('scoreBoard', currentRoom.players);
       socket.to(currentRoom.name).broadcast.emit('message', {
         text: userInfo.htmlusername + ' has disconnected', username:null
       });
@@ -232,7 +231,7 @@ function resetCanvas(room){
 }
 
 function resetTimer(room){
-  room.timeLeft = 91;
+  room.timeLeft = roundTime;
   io.to(room).emit('timeLeft', {time: room.timeLeft});
 }
 
