@@ -19,7 +19,6 @@ var lastY = 0;
 var input = document.getElementById('input_text');
 var userlist = document.getElementById('userlist');
 var username;
-var id;
 var canDraw = false;
 var currentWord = null;
 var chat = document.getElementById('chat_text');
@@ -130,7 +129,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
     };
     //Make cursor 'pointer'
   }
-  else if (allowedToDraw.user.id != id){
+  else if (allowedToDraw.user.id != socket.id){
     input.disabled = false;
     chat.innerHTML = ' &#8226 ' + allowedToDraw.user.htmlusername + ' is drawing<br>' + chat.innerHTML;
     currentWord = null;

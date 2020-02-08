@@ -119,8 +119,8 @@ io.on('connection', function(socket){
       socket.to(userInfo.room).broadcast.emit('message', {
         text: userInfo.htmlusername + ' has connected', username:null
       });
-      socket.emit('timeLeft', currentRoom.timeLeft);
-      io.emit('scoreBoard', currentRoom.players);
+      socket.emit('timeLeft', {time: currentRoom.timeLeft});
+      io.to(currentRoom.name).emit('scoreBoard', currentRoom.players);
     }
   });
 
@@ -142,7 +142,7 @@ io.on('connection', function(socket){
             userInfo.username!= ''){
       console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
-      io.to(currentRoom).emit('scoreBoard', currentRoom.players);
+      io.to(currentRoom.name).emit('scoreBoard', currentRoom.players);
       socket.to(currentRoom.name).broadcast.emit('message', {
         text: userInfo.htmlusername + ' has disconnected', username:null
       });
@@ -154,11 +154,11 @@ io.on('connection', function(socket){
         if (currentRoom.players.length > 0){
           randomizeDrawer(currentRoom);
           socket.to(currentRoom.name).broadcast.emit('allowedToDraw', {
-            bool:false, word:null, user:theDrawer
+            bool:false, word:null, user:currentRoom.theDrawer
           });
           randomizeWord(currentRoom);
           io.to(currentRoom.theDrawer.id).emit('allowedToDraw', {
-            bool:true, word:currentWord, user:theDrawer
+            bool:true, word:currentRoom.currentWord, user:currentRoom.theDrawer
           });
           resetTimer(currentRoom);
         }
@@ -172,22 +172,22 @@ io.on('connection', function(socket){
   });
 
   socket.on('message', function(message){
-    if (userInfo.id != theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
+    if (userInfo.id != currentRoom.theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
       text = encodeHTML(message.text);
       socket.to(currentRoom.name).broadcast.emit('message', {text:text, username:userInfo.username});
       socket.emit('message', {text:text, username:'You'});
       if (message.text.toLowerCase() == currentRoom.currentWord) {
         io.to(currentRoom.name).emit('message', {text:'Correct!', user:null});
         // Give points
-        currentRoom.players.find(user => user.id == theDrawer.id).drawerPoints += 1;
+        currentRoom.players.find(user => user.id == currentRoom.theDrawer.id).drawerPoints += 1;
         currentRoom.players.find(user => user.id == userInfo.id).guesserPoints += 1;
         // change drawer
         currentRoom.theDrawer = userInfo;
         io.to(currentRoom.name).emit('scoreBoard', currentRoom.players);
-        io.to(currentRoom.name).broadcast.emit('allowedToDraw', {bool:false, word:null, user:theDrawer});
+        io.to(currentRoom.name).emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
         randomizeWord(currentRoom);
         setTimeout(function(){
-          socket.emit('allowedToDraw', {bool:true, word: currentWord, user:theDrawer});
+          socket.emit('allowedToDraw', {bool:true, word: currentRoom.currentWord, user:currentRoom.theDrawer});
           resetBrush(currentRoom);
           resetCanvas(currentRoom);
           resetTimer(currentRoom);

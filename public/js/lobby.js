@@ -28,8 +28,10 @@ function refreshRooms(){
     p.innerHTML = 'There are no available rooms right now. Feel free to create a new one!';
     p.style = 'font-size:12pt'
     roomList.appendChild(p);
+    document.getElementById('join_button').style = 'display:none'
   }
   else{
+    document.getElementById('join_button').style = 'display:inline-block'
     for (var i = 0; i < rooms.length; i++) {
       var label = document.createElement('label');
       label.className = 'room_label';
