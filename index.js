@@ -45,13 +45,13 @@ setInterval(function(){
       io.to(rooms[i].name).emit('message', {
         text: 'Time ran out! The word was "' + rooms[i].currentWord + '". Randomizing new drawer...', username:null
       });
+      resetTimer(rooms[i]);
       randomizeDrawer(rooms[i]);
       io.to(rooms[i].name).emit('allowedToDraw', {
         bool:false, word:null, user:rooms[i].theDrawer
       });
       resetBrush(rooms[i]);
       randomizeWord(rooms[i]);
-      resetTimer(rooms[i]);
       setTimeout(function(){
         io.to(rooms[i].theDrawer.id).emit('allowedToDraw', {
           bool:true, word:rooms[i].currentWord, user:rooms[i].theDrawer
@@ -178,6 +178,7 @@ io.on('connection', function(socket){
       socket.emit('message', {text:text, username:'You'});
       if (message.text.toLowerCase() == currentRoom.currentWord) {
         io.to(currentRoom.name).emit('message', {text:'Correct!', user:null});
+        resetTimer(currentRoom);
         // Give points
         currentRoom.players.find(user => user.id == currentRoom.theDrawer.id).drawerPoints += 1;
         currentRoom.players.find(user => user.id == userInfo.id).guesserPoints += 1;
@@ -254,7 +255,7 @@ function getRoom(roomName){
 function updateRooms(){
   jsonRooms = [];
   for (var i = 0; i < rooms.length; i++) {
-    jsonRooms.push({name:rooms[i].name, players:rooms[i].players.length});
+    jsonRooms.push({name:rooms[i].htmlName, players:rooms[i].players.length});
   }
   var jsonData = JSON.stringify(jsonRooms);
   fs.writeFile('public/rooms.json', jsonData, function(err) {
