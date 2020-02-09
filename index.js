@@ -255,7 +255,7 @@ function getRoom(roomName){
 function updateRooms(){
   jsonRooms = [];
   for (var i = 0; i < rooms.length; i++) {
-    jsonRooms.push({name:rooms[i].htmlName, players:rooms[i].players.length});
+    jsonRooms.push({name:rooms[i].name, htmlName:rooms[i].htmlName, players:rooms[i].players.length});
   }
   var jsonData = JSON.stringify(jsonRooms);
   fs.writeFile('public/rooms.json', jsonData, function(err) {

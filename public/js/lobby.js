@@ -43,10 +43,10 @@ function refreshRooms(){
       input.name = 'room';
       var span = document.createElement('span');
       if (rooms[i].players != 1){
-        span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' players';
+        span.innerHTML = rooms[i].htmlName + ': ' + rooms[i].players + ' players';
       }
       else{
-        span.innerHTML = rooms[i].name + ': ' + rooms[i].players + ' player';
+        span.innerHTML = rooms[i].htmlName + ': ' + rooms[i].players + ' player';
       }
       label.appendChild(input);
       label.appendChild(span);
