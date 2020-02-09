@@ -10,16 +10,15 @@ var ctx = canvas.getContext('2d');
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
 ctx.lineWidth = 10;
-ctx.strokeStyle = "#000";
+ctx.strokeStyle = '#000';
 
 //Other variables
 var isDrawing = false;
 var lastX = 0;
 var lastY = 0;
-var input = document.getElementById("input_text");
+var input = document.getElementById('input_text');
 var userlist = document.getElementById('userlist');
 var username;
-var id;
 var canDraw = false;
 var currentWord = null;
 var chat = document.getElementById('chat_text');
@@ -67,19 +66,11 @@ setInterval(function(){
 
 // ---SOCKET LISTENERS---
 //Send initial info when connection
-socket.on('init', function(conf){
-  username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-  var backupUsername = socket.id.substring(0, 5);
-  if (username == undefined || username == ""){
-    username = window.prompt("What is your username?",backupUsername);
-    if (username == undefined || username == "" || username == null){
-      username = backupUsername;
-    }
-    else {
-      document.cookie = "username=" + username;
-    }
-  }
-  id = socket.id;
+socket.on('init', function(){
+  askUsername();
+  socket.emit('connectInfo', {username:username, room:sessionStorage.getItem('room')});
+});
+socket.on('history', function(conf){
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
   for (var i = 0; i < conf.history.length; i++){
     event = conf.history[i]
@@ -94,25 +85,25 @@ socket.on('init', function(conf){
       ctx.lineWidth =  event.size;
     }
   }
+
   ctx.lineWidth = conf.brushSize;
   ctx.strokeStyle = conf.brushColor;
-  socket.emit('connectInfo', {username:username, id:socket.id});
 });
 
 
 
 socket.on('disconnect', (reason) => {
-    chat.innerHTML = " &#8226 You have disconnected<br>" + chat.innerHTML;
-    userlist.innerHTML = "";
+    chat.innerHTML = ' &#8226 You have disconnected<br>' + chat.innerHTML;
+    userlist.innerHTML = '';
 });
 
 //Display new message in chat
 socket.on('message', function(message){
   if (message.username == null){
-    chat.innerHTML = (" &#8226 " + message.text + "<br>" + chat.innerHTML);
+    chat.innerHTML = (' &#8226 ' + message.text + '<br>' + chat.innerHTML);
   }
   else {
-    chat.innerHTML = " &#8226 " + message.username + ": " + message.text + "<br>" + chat.innerHTML;
+    chat.innerHTML = ' &#8226 ' + message.username + ': ' + message.text + '<br>' + chat.innerHTML;
   }
   // textbox = document.getElementById('textbox');
   // textbox.scrollTop = textbox.scrollHeight;
@@ -124,29 +115,29 @@ socket.on('allowedToDraw', function(allowedToDraw){
   textPlace = document.getElementById('wordToDraw');
   var belowCanvas = document.getElementById('belowCanvas');
   var chat_input = document.getElementById('chat_input');
-  document.getElementById('input_text').value = "";
+  document.getElementById('input_text').value = '';
   var modifyers = document.getElementsByClassName('brush_modifyer');
   if (canDraw) {
     input.disabled = true;
     currentWord = allowedToDraw.word;
-    textPlace.textContent = "Your word is: " + currentWord;
-    chat.innerHTML = " &#8226 You are drawing: " + currentWord + "<br>" + chat.innerHTML;
-    belowCanvas.style.display = "flex";
-    chat_input.style.display = "none";
+    textPlace.textContent = 'Your word is: ' + currentWord;
+    chat.innerHTML = ' &#8226 You are drawing: ' + currentWord + '<br>' + chat.innerHTML;
+    belowCanvas.style.display = 'flex';
+    chat_input.style.display = 'none';
     for (i = 0; i < modifyers.length; i++) {
-      modifyers[i].style.display = "inline";
+      modifyers[i].style.display = 'inline';
     };
     //Make cursor 'pointer'
   }
-  else if (allowedToDraw.user.id != id){
+  else if (allowedToDraw.user.id != socket.id){
     input.disabled = false;
-    chat.innerHTML = " &#8226 " + allowedToDraw.user.htmlusername + " is drawing<br>" + chat.innerHTML;
+    chat.innerHTML = ' &#8226 ' + allowedToDraw.user.htmlusername + ' is drawing<br>' + chat.innerHTML;
     currentWord = null;
-    textPlace.textContent = " ";
-    belowCanvas.style.display = "none";
-    chat_input.style.display = "inline-block";
+    textPlace.textContent = ' ';
+    belowCanvas.style.display = 'none';
+    chat_input.style.display = 'inline-block';
     for (i = 0; i < modifyers.length; i++) {
-      modifyers[i].style.display = "none";
+      modifyers[i].style.display = 'none';
     };
     //TODO: Make cursor 'not-allowed'
   }
@@ -193,7 +184,7 @@ socket.on('scoreBoard', function(scoreBoard) {
 // ---FUNCTIONS---
 //Send message
 function send() {
-  if (input.value != "") {
+  if (input.value != '') {
     socket.emit('message', {text:input.value, username:username});
     input.value = '';
   }
@@ -207,7 +198,7 @@ function changeBrushSize(newSize) {
 }
 
 function clearCanvas() {
-  socket.emit('clearCanvas', {});
+  socket.emit('clearCanvas');
 }
 
 function draw(e) {
@@ -264,4 +255,17 @@ function show_sizes(){
   }, 500);
 }
 function hide_sizes(){
+}
+function askUsername(){
+  username = sessionStorage.getItem('username');
+  var backupUsername = socket.id.substring(0, 5);
+  if (username == undefined || username == '' || username == null){
+    username = window.prompt('What is your username?',backupUsername);
+    if (username == undefined || username == '' || username == null){
+      username = backupUsername;
+    }
+    else {
+      sessionStorage.setItem('username', username);
+    }
+  }
 }
