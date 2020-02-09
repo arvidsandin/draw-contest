@@ -8,7 +8,6 @@ function Get(link){
 var roomList = document.getElementById('room_list');
 var newRoomNameInput = document.getElementById("create_room_input");
 refreshRooms();
-setInterval(refreshRooms, 5000);
 
 newRoomNameInput.addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
@@ -21,6 +20,7 @@ askUsername();
 
 
 function refreshRooms(){
+  roomList.style="color:#888";
   var rooms = JSON.parse(Get('./rooms.json'));
   while (roomList.firstChild) {roomList.removeChild(roomList.firstChild);}
   if (rooms.length==0){
@@ -53,6 +53,7 @@ function refreshRooms(){
       roomList.appendChild(label);
     }
   }
+  roomList.style="color=#000";
 }
 
 function joinRoom(){

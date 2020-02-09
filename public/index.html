@@ -21,14 +21,25 @@
   <h1>Draw contest</h1>
   <div class="wrapper">
     <div class="wrapper_item" id="main">
-      <div id="room_list" class="textbox">
+      <div class="textbox" id="middle">
+        <button type="button" name="button" id="refresh" class="generic_button" onclick="refreshRooms()">Refresh</button>
+        <div id="room_list">
+        </div>
       </div>
       <br>
       <button type="button" class="generic_button" id="join_button" name="button" onclick="joinRoom()">Join</button>
     </div>
     <div class="wrapper_item" id="sidebar_left">
       <div class="textbox">
-        <p>Welcome to Draw contest!</p>
+        <h2>Welcome to Draw contest!</h2>
+        <p>Here you can enter one of the available room from the list, or create a new one!</p>
+        <p>Draw content is a real-time draw-and-guess game with simple rules!</p>
+        <ul>
+          <li>One player tries to draw an image of something</li>
+          <li>The others try to guess what it is</li>
+          <li>If a player guesses the correct word, both that player and the drawer gets awarded with one point each.</li>
+          <li>If time runs out, a new drawer is randomly chosen and no point are awarded</li>
+        </ul>
       </div>
     </div>
     <div class="wrapper_item" id="sidebar_right">

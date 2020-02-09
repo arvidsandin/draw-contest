@@ -16,6 +16,11 @@ h1{
   font-weight: bold;
   /* font-family: '' */
 }
+h2{
+  text-align: center;
+  font-weight:bold;
+  font-size:16pt
+}
 
 body{
   font-family: sans-serif;
@@ -90,6 +95,10 @@ body{
   display: inline-block;
   text-align: center;
 }
+#refresh{
+  margin: 10px auto 0 auto;
+  padding: 3px 10px;
+}
 #room_list{
   font-size: 16pt;
   padding: 10px;
@@ -135,7 +144,7 @@ body{
   #sidebar_right{
     order:3;
   }
-  #room_list{
+  #middle{
     display: inline-block;
     min-width: 250px;
     max-width: 400px;
