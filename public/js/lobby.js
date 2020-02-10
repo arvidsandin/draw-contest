@@ -8,6 +8,7 @@ function Get(link){
 var roomList = document.getElementById('room_list');
 var newRoomNameInput = document.getElementById("create_room_input");
 refreshRooms();
+askUsername();
 
 newRoomNameInput.addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
@@ -16,7 +17,12 @@ newRoomNameInput.addEventListener("keyup", function(event) {
     document.getElementById("button_create").click();
   }
 });
-askUsername();
+roomList.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("join_button").click();
+  }
+});
 
 
 function refreshRooms(){

@@ -121,6 +121,7 @@ body{
 }
 #bottom_row{
   margin: 0 15px;
+  text-align: right;
 }
 
 
@@ -155,4 +156,5 @@ body{
 
   .generic_button{ border-radius: 0; }
   .generic_button:hover{background: #276b80;}
+  .generic_button:focus { background: #276b80; }
 }
