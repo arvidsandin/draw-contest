@@ -93,18 +93,13 @@ socket.on('history', function(conf){
 
 
 socket.on('disconnect', (reason) => {
-    chat.innerHTML = ' &#8226 You have disconnected<br>' + chat.innerHTML;
-    userlist.innerHTML = '';
+  addToChat('You have disconnected', null);
+  userlist.innerHTML = '';
 });
 
 //Display new message in chat
 socket.on('message', function(message){
-  if (message.username == null){
-    chat.innerHTML = (' &#8226 ' + message.text + '<br>' + chat.innerHTML);
-  }
-  else {
-    chat.innerHTML = ' &#8226 ' + message.username + ': ' + message.text + '<br>' + chat.innerHTML;
-  }
+  addToChat(message.text, message.username);
   // textbox = document.getElementById('textbox');
   // textbox.scrollTop = textbox.scrollHeight;
 });
@@ -121,7 +116,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
     input.disabled = true;
     currentWord = allowedToDraw.word;
     textPlace.textContent = 'Your word is: ' + currentWord;
-    chat.innerHTML = ' &#8226 You are drawing: ' + currentWord + '<br>' + chat.innerHTML;
+    addToChat('You are drawing: ' + currentWord, null);
     belowCanvas.style.display = 'flex';
     chat_input.style.display = 'none';
     for (i = 0; i < modifyers.length; i++) {
@@ -131,7 +126,7 @@ socket.on('allowedToDraw', function(allowedToDraw){
   }
   else if (allowedToDraw.user.id != socket.id){
     input.disabled = false;
-    chat.innerHTML = ' &#8226 ' + allowedToDraw.user.htmlusername + ' is drawing<br>' + chat.innerHTML;
+    addToChat(allowedToDraw.user.htmlusername + ' is drawing', null);
     currentWord = null;
     textPlace.textContent = ' ';
     belowCanvas.style.display = 'none';
@@ -232,6 +227,22 @@ function draw(e) {
 //adapt strokes for current canvas size
 function make_relative(a){
   return(a*canvasResolution/canvas.clientHeight)
+}
+
+function addToChat(text, user){
+  var p = document.createElement('p');
+  if (user == null){
+    p.innerHTML = (' &#8226 ' + text);
+  }
+  else {
+    p.innerHTML = ' &#8226 ' + user + ': ' + text;
+  }
+  p.classList.add('hide');
+  chat.prepend(p);
+  setTimeout(function(){
+    p.classList.add('show');
+    p.classList.remove('hide');
+  }, 10);
 }
 
 // TODO: make popup with modifyers

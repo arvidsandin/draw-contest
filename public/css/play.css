@@ -227,6 +227,18 @@ th, td{
   width: 95%;
   max-height: 99%;
 }
+#chat_text > p{
+  margin: 2px;
+}
+.hide {
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.show {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
 #opaque_gradient{
   position: sticky;
   height: 100%;
