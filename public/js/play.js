@@ -176,9 +176,16 @@ socket.on('timeLeft', function(time) {
 });
 
 socket.on('scoreBoard', function(scoreBoard) {
-  userlist.innerHTML = '';
+  userlist.innerHTML = '<tr>\n<th>Name</th>\n<th style="width:4em">Points</th></tr>';
   for (var i = 0; i < scoreBoard.length; i++) {
-    userlist.innerHTML += (scoreBoard[i].htmlusername + ':<nbsp>' + (scoreBoard[i].drawerPoints + scoreBoard[i].guesserPoints) + '<br>');
+    var row = document.createElement('tr');
+    var name = document.createElement('td');
+    name.innerHTML = scoreBoard[i].htmlusername;
+    var points = document.createElement('td');
+    points.innerHTML = (scoreBoard[i].drawerPoints + scoreBoard[i].guesserPoints)
+    row.appendChild(name);
+    row.appendChild(points);
+    userlist.appendChild(row);
   }
 })
 // ---FUNCTIONS---
