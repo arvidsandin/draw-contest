@@ -127,7 +127,6 @@ io.on('connection', function(socket){
   socket.on('clearCanvas', (x) => {
     if (userInfo.id == currentRoom.theDrawer.id){
       resetCanvas(currentRoom);
-      resetBrush(currentRoom);
     }
   });
 
