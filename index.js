@@ -171,6 +171,9 @@ io.on('connection', function(socket){
           rooms = rooms.filter(room => room.name != currentRoom.name);
         }
       }
+      else if (currentRoom.theDrawer.id == null) {
+        rooms = rooms.filter(room => room.name != currentRoom.name);
+      }
       updateRooms();
     }
   });
@@ -190,6 +193,7 @@ io.on('connection', function(socket){
         if (checkWin(currentRoom, userInfo)){
           currentRoom.theDrawer = {id:null};
           io.to(currentRoom.name).emit('allowedToDraw', {bool:false, word:null, user:null});
+          currentRoom.currentWord = null;
           setTimeout(function(){
             resetBrush(currentRoom);
             resetCanvas(currentRoom);
