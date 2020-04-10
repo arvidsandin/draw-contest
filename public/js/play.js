@@ -68,7 +68,7 @@ setInterval(function(){
 //Send initial info when connection
 socket.on('init', function(){
   askUsername();
-  socket.emit('connectInfo', {username:username, room:sessionStorage.getItem('room')});
+  socket.emit('connectInfo', {username:username, room:sessionStorage.getItem('room'), maxPoints:sessionStorage.getItem('maxPoints')});
 });
 socket.on('history', function(conf){
   ctx.clearRect(0, 0, (canvas.width), (canvas.height))
@@ -123,6 +123,16 @@ socket.on('allowedToDraw', function(allowedToDraw){
       modifyers[i].style.display = 'inline';
     };
     //Make cursor 'pointer'
+  }
+  else if (allowedToDraw.user == null) {
+    input.disabled = false;
+    currentWord = null;
+    textPlace.textContent = ' ';
+    belowCanvas.style.display = 'none';
+    chat_input.style.display = 'inline-block';
+    for (i = 0; i < modifyers.length; i++) {
+      modifyers[i].style.display = 'none';
+    };
   }
   else if (allowedToDraw.user.id != socket.id){
     input.disabled = false;

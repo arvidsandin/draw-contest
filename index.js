@@ -106,6 +106,7 @@ io.on('connection', function(socket){
           currentWord: '',
           history: [],
           timeLeft: roundTime,
+          maxPoints: info.maxPoints
         }
         rooms.push(currentRoom);
         randomizeWord(currentRoom);
@@ -113,6 +114,9 @@ io.on('connection', function(socket){
         resetTimer(currentRoom);
         resetBrush(currentRoom);
         resetCanvas(currentRoom);
+        socket.broadcast.emit('message', {
+          text: currentRoom.maxPoints, username:null
+        });
       }
       updateRooms();
       console.log(info.username + ' connected');
@@ -135,10 +139,11 @@ io.on('connection', function(socket){
       socket.connect();
     }
     else if(userInfo != undefined &&
-            userInfo.roomName != null &&
-            userInfo.roomName != '' &&
-            userInfo.username != undefined &&
-            userInfo.username!= ''){
+      userInfo.roomName != null &&
+      userInfo.roomName != '' &&
+      userInfo.username != undefined &&
+      userInfo.username!= ''
+    ){
       console.log(userInfo.username + ' disconnected');
       currentRoom.players = currentRoom.players.filter(user => user.id != userInfo.id);
       io.to(currentRoom.name).emit('scoreBoard', currentRoom.players);
@@ -181,18 +186,31 @@ io.on('connection', function(socket){
         // Give points
         currentRoom.players.find(user => user.id == currentRoom.theDrawer.id).drawerPoints += 1;
         currentRoom.players.find(user => user.id == userInfo.id).guesserPoints += 1;
-        // change drawer
-        currentRoom.theDrawer = userInfo;
         io.to(currentRoom.name).emit('scoreBoard', currentRoom.players);
-        io.to(currentRoom.name).emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
-        randomizeWord(currentRoom);
-        setTimeout(function(){
-          socket.emit('allowedToDraw', {bool:true, word: currentRoom.currentWord, user:currentRoom.theDrawer});
-          resetBrush(currentRoom);
-          resetCanvas(currentRoom);
-          resetTimer(currentRoom);
-        }, newDrawerDelay);
+        if (checkWin(currentRoom, userInfo)){
+          currentRoom.theDrawer = {id:null};
+          io.to(currentRoom.name).emit('allowedToDraw', {bool:false, word:null, user:null});
+          setTimeout(function(){
+            resetBrush(currentRoom);
+            resetCanvas(currentRoom);
+            resetTimer(currentRoom);
+            currentRoom.timeLeft = 120059;
+          }, newDrawerDelay);
+        }
+        else {
+          // change drawer
+          currentRoom.theDrawer = userInfo;
+          io.to(currentRoom.name).emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
+          randomizeWord(currentRoom);
+          setTimeout(function(){
+            socket.emit('allowedToDraw', {bool:true, word: currentRoom.currentWord, user:currentRoom.theDrawer});
+            resetBrush(currentRoom);
+            resetCanvas(currentRoom);
+            resetTimer(currentRoom);
+          }, newDrawerDelay);
+        }
       }
+
     }
     messageTimestamp = Date.now();
   });
@@ -247,6 +265,36 @@ function randomizeDrawer(room){
   room.theDrawer = theNewDrawer;
 }
 
+function checkWin(room, guesser){
+  var drawer = room.players.find(user => user.id == room.theDrawer.id);
+  var guesser = room.players.find(user => user.id == guesser.id);
+  if (drawer.drawerPoints + drawer.guesserPoints >= room.maxPoints && guesser.drawerPoints + guesser.guesserPoints >= room.maxPoints){
+    win(room, drawer, guesser)
+    return true;
+  }
+  else if (drawer.drawerPoints + drawer.guesserPoints >= room.maxPoints) {
+    win(room, drawer)
+    return true;
+  }
+  else if (guesser.drawerPoints + guesser.guesserPoints >= room.maxPoints) {
+    win(room, guesser, null)
+    return true;
+  }
+  return false
+}
+
+function win(room, playerA, playerB){
+  if (playerB == null){
+    io.to(room.name).emit('message', {text:playerA.htmlusername + ' won!', user:null});
+  }
+  else{
+    io.to(room.name).emit('message', {
+      text:"It's a tie between " + playerA.htmlusername + ' and ' + playerB.htmlusername,
+      user:null
+    });
+  }
+}
+
 function getRoom(roomName){
   return rooms.find(roomToFind => roomToFind.name == roomName);
 }
@@ -259,7 +307,7 @@ function updateRooms(){
   var jsonData = JSON.stringify(jsonRooms);
   fs.writeFile('public/rooms.json', jsonData, function(err) {
     if (err) {
-        console.log(err);
+      console.log(err);
     }
   });
 }

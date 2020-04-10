@@ -92,6 +92,7 @@ function askUsername(){
 function createRoom(){
   var name = document.getElementById('create_room_input').value;
   var availableRooms = document.getElementsByClassName('room_radio');
+  var maxPoints = document.getElementById('points').value;
   var nameIsAvailable = true;
   for (var i = 0; i < availableRooms.length; i++) {
     if (availableRooms[i].value == name) {
@@ -100,6 +101,7 @@ function createRoom(){
   }
   if (nameIsAvailable && name != '' && name != undefined) {
     sessionStorage.setItem('room', name);
+      sessionStorage.setItem('maxPoints', maxPoints);
     window.location.href = 'play';
   }
   else{
