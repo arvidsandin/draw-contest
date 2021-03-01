@@ -31,7 +31,7 @@ app.use(express.static(__dirname + '/public'));
 
 var port = process.env.PORT;
 if (port == null || port == '') {
-  port = 80;
+  port = 8081;
 }
 http.listen(port, function(){
   console.log('listening on port ' + port);
@@ -181,8 +181,6 @@ io.on('connection', function(socket){
   socket.on('message', function(message){
     if (userInfo.id != currentRoom.theDrawer.id && Date.now() - messageTimestamp > minMessageInterval){
       text = encodeHTML(message.text);
-      socket.to(currentRoom.name).broadcast.emit('message', {text:text, username:userInfo.username});
-      socket.emit('message', {text:text, username:'You'});
       if (message.text.toLowerCase() == currentRoom.currentWord) {
         io.to(currentRoom.name).emit('message', {text:'Correct!', user:null});
         resetTimer(currentRoom);
@@ -213,6 +211,9 @@ io.on('connection', function(socket){
             resetTimer(currentRoom);
           }, newDrawerDelay);
         }
+      }else{
+        socket.to(currentRoom.name).broadcast.emit('message', {text:text, username:userInfo.username});
+        socket.emit('message', {text:text, username:'You'});
       }
 
     }
