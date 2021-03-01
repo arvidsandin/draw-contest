@@ -42,9 +42,11 @@ setInterval(function(){
   for (let i = 0; i < rooms.length; i++) {
     rooms[i].timeLeft -= 1;
     if (rooms[i].timeLeft < 0 && rooms[i].players.length > 1) {
-      io.to(rooms[i].name).emit('message', {
-        text: 'Time ran out! The word was "' + rooms[i].currentWord + '". Randomizing new drawer...', username:null
-      });
+      if (rooms[i].currentWord != '') {
+        io.to(rooms[i].name).emit('message', {
+          text: 'Time ran out! The word was "' + rooms[i].currentWord + '". Randomizing new drawer...', username:null
+        });
+      }
       resetTimer(rooms[i]);
       randomizeDrawer(rooms[i]);
       io.to(rooms[i].name).emit('allowedToDraw', {
@@ -93,7 +95,12 @@ io.on('connection', function(socket){
       if (currentRoom != undefined) {
         currentRoom.players.push(userInfo);
         socket.emit('history', {brushSize:currentRoom.brushSize, brushColor:currentRoom.brushColor, history:currentRoom.history});
-        socket.emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
+        if (currentRoom.players.length == 2){
+          socket.emit('allowedToDraw', {bool:false, word:null, user:null});
+        }
+        else{
+          socket.emit('allowedToDraw', {bool:false, word:null, user:currentRoom.theDrawer});
+        }
       }
       else {
         currentRoom = {
@@ -101,19 +108,19 @@ io.on('connection', function(socket){
           htmlName: encodeHTML(userInfo.roomName),
           players: [userInfo],
           theDrawer: userInfo,
-          brushColor:'',
+          brushColor: '',
           brushSize: 0,
           currentWord: '',
           history: [],
-          timeLeft: roundTime,
+          timeLeft: 1,
           maxPoints: info.maxPoints
         }
         rooms.push(currentRoom);
-        randomizeWord(currentRoom);
-        socket.emit('allowedToDraw', {bool:true, word: currentRoom.currentWord, user:userInfo});
-        resetTimer(currentRoom);
         resetBrush(currentRoom);
         resetCanvas(currentRoom);
+        socket.emit('message', {
+          text: 'Waiting for another player', username:null
+        });
         socket.broadcast.emit('message', {
           text: currentRoom.maxPoints, username:null
         });

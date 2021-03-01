@@ -136,7 +136,9 @@ socket.on('allowedToDraw', function(allowedToDraw){
   }
   else if (allowedToDraw.user.id != socket.id){
     input.disabled = false;
-    addToChat(allowedToDraw.user.htmlusername + ' is drawing', null);
+    if (allowedToDraw.user != null) {
+      addToChat(allowedToDraw.user.htmlusername + ' is drawing', null);
+    }
     currentWord = null;
     textPlace.textContent = ' ';
     belowCanvas.style.display = 'none';
