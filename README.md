@@ -1,6 +1,6 @@
 # Draw-contest
 
-A web app for a real-time draw-and-guess game using socket.io. Available at [https://drawcontest.herokuapp.com/](https://drawcontest.herokuapp.com/).
+A web app for a real-time draw-and-guess game using socket.io. Due to the removal of Heroku free plans in November 28, 2022, there is no longer a live version of this project.
 
 
 ### Prerequisites (server)
